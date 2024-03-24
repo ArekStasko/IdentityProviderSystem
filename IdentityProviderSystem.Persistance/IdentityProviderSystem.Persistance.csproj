@@ -10,4 +10,8 @@
       <ProjectReference Include="..\IdentityProviderSystem.Domain\IdentityProviderSystem.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="LanguageExt.Core" Version="4.4.8" />
+    </ItemGroup>
+
 </Project>

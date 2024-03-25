@@ -10,9 +10,12 @@ namespace IdentityProviderSystem.Controllers.User;
 public class UserController
 {
     private readonly IUserService _userService;
-    public UserController(IUserService userService)
+    private readonly ILogger<UserController> _logger;
+    
+    public UserController(IUserService userService, ILogger<UserController> logger)
     {
         _userService = userService;
+        _logger = logger;
     }
     
     [HttpPost(Name = "[controller]/register")]
@@ -25,6 +28,7 @@ public class UserController
             Username = registerRequest.Username,
             Hash = registerRequest.Hash
         };
+        _logger.LogInformation("Register endpoint starts processing");
         var result = await _userService.Register(userDto);
         return result.ToOk();
     }
@@ -39,6 +43,7 @@ public class UserController
             Username = loginRequest.Username,
             Hash = loginRequest.Hash
         };
+        _logger.LogInformation("Login endpoint starts processing");
         var result = await _userService.Login(userDto);
         return result.ToOk();
     }
@@ -49,6 +54,7 @@ public class UserController
     public async ValueTask<IActionResult> GetStatus([FromQuery] int id)
     {
         var result = await _userService.GetStatus(id);
+        _logger.LogInformation("Get Status endpoint starts processing");
         return result.ToOk();
     }
 }

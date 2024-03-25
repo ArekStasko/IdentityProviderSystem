@@ -1,0 +1,18 @@
+services:
+    identityprovidersystem-logger:
+        image: datalust/seq:latest
+        container_name: identityprovidersystem-logger
+        ports:
+            - "5341:80"
+        environment:
+            ACCEPT_EULA: "Y"
+        restart: unless-stopped
+        depends_on:
+            - mssql-server
+    identityprovidersystem-api:
+        build: ./IdentityProviderSystem.API
+        container_name: identityprovidersystem-api
+        depends-on:
+            - identityprovidersystem-logger
+        ports:
+            - "8080:8080"

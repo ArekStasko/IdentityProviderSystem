@@ -9,4 +9,6 @@ public static class Extensions
     {
         services.AddScoped<IUserService, UserService.UserService>();
     }
+
+    public static void AddServicesMapperProfile(this IServiceCollection services) => services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 }

@@ -7,5 +7,5 @@ public interface IUserRepository
 {
     public Task<Result<bool>> Create(User user);
     public Task<Result<bool>> Update(User user);
-    public Task<Result<bool>> Get(int id);
+    public Task<Result<User>> Get(string username);
 }

@@ -46,9 +46,9 @@ public class UserController
     [HttpGet(Name = "[controller]/get-status")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Exception))]
-    public async ValueTask<IActionResult> GetStatus([FromQuery] int id)
+    public async ValueTask<IActionResult> GetStatus([FromQuery] string username)
     {
-        var result = await _userService.GetStatus(id);
+        var result = await _userService.GetStatus(username);
         _logger.LogInformation("Get Status endpoint starts processing");
         return result.ToOk();
     }

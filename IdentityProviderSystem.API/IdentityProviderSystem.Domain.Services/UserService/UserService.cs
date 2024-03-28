@@ -27,7 +27,7 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<Result<bool>> GetStatus(int id)
+    public Task<Result<bool>> GetStatus(string username)
     {
         throw new NotImplementedException();
     }

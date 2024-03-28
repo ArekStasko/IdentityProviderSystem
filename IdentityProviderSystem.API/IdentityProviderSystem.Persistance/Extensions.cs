@@ -1,4 +1,6 @@
-﻿using IdentityProviderSystem.Persistance.Repositories.UserRepository;
+﻿using IdentityProviderSystem.Persistance.Interfaces;
+using IdentityProviderSystem.Persistance.Repositories.SaltRepository;
+using IdentityProviderSystem.Persistance.Repositories.UserRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,7 @@ public static class Extensions
     public static void AddRepositories(this IServiceCollection serivces)
     {
         serivces.AddScoped<IUserRepository, UserRepository>();
+        serivces.AddScoped<ISaltRepository, SaltRepository>();
     }
     
     private static string GetConnectionString()

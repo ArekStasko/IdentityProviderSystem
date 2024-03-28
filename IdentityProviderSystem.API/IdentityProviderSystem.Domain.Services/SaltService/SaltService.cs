@@ -1,12 +1,40 @@
-﻿using LanguageExt.Common;
+﻿using IdentityProviderSystem.Persistance.Repositories.SaltRepository;
+using LanguageExt.Common;
+using Microsoft.Extensions.Logging;
 
 namespace IdentityProviderSystem.Domain.Services.SaltService;
 
 public class SaltService : ISaltService
 {
-    public Task<Result<Guid>> GenerateSalt()
+    private readonly ISaltRepository _repository;
+    private readonly ILogger<ISaltService> _logger;
+    
+    public SaltService(ISaltRepository repository, ILogger<ISaltService> logger)
     {
-        var uuid = Guid.NewGuid();
-        
+        _repository = repository;
+        _logger = logger;
+    }
+    
+    public async Task<Result<Guid>> GenerateSalt()
+    {
+        try
+        {
+            var uuid = Guid.NewGuid();
+            var result = await _repository.GetCurrent();
+            return result.Match<Result<Guid>>(currentSalt =>
+            {
+                if (currentSalt.SaltValue == uuid)return new Result<Guid>(Guid.NewGuid());
+                return new Result<Guid>(uuid);
+            }, e =>
+            {
+                _logger.LogError("Generate Salt failed with error from salt repository: {e}", e);
+                return new Result<Guid>(e);
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Generate Salt failed with an exception: {e}", e);            
+            return new Result<Guid>(e);
+        }
     }
 }

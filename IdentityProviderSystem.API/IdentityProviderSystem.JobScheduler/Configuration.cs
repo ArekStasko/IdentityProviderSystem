@@ -10,7 +10,7 @@ public class Configuration
 {
     static async Task<IScheduler> ConfigureWorkers(IScheduler scheduler)
     {
-        foreach(var worker in SaltJobFactory.Workers)
+        foreach(var worker in ZookeperJobFactory.Workers)
         {
             scheduler = await worker.ConfigureScheduler(scheduler);
         }
@@ -37,9 +37,11 @@ public class Configuration
     {
         try
         {
+            var serviceProvider = services.BuildServiceProvider();
+            
             var factory = new StdSchedulerFactory();
             var scheduler = await factory.GetScheduler();
-            scheduler.JobFactory = new SaltScheduleService(services, scheduler);
+            scheduler.JobFactory = new ZookeperJobFactory(serviceProvider, scheduler);
 
             await ConfigureSaltScheduleService(scheduler);
 

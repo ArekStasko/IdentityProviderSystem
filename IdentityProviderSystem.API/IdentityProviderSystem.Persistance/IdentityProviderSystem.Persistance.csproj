@@ -25,6 +25,7 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+      <PackageReference Include="Quartz" Version="3.8.1" />
     </ItemGroup>
 
 </Project>

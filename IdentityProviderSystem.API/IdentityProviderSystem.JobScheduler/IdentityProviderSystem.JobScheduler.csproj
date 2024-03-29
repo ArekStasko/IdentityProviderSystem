@@ -7,14 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\IdentityProviderSystem.Domain.Services\IdentityProviderSystem.Domain.Services.csproj" />
       <ProjectReference Include="..\IdentityProviderSystem.Domain\IdentityProviderSystem.Domain.csproj" />
       <ProjectReference Include="..\IdentityProviderSystem.Persistance\IdentityProviderSystem.Persistance.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="13.0.1" />
-      <PackageReference Include="LanguageExt.Core" Version="4.4.8" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
       <PackageReference Include="Quartz" Version="3.8.1" />
     </ItemGroup>
 

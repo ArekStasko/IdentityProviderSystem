@@ -18,18 +18,18 @@ public class SaltRepository : ISaltRepository
         _logger = logger;
     }
     
-    public async Task<Result<bool>> Delete(ISalt salt)
+    public async Task<Result<bool>> Delete()
     {
         try
         {
-            var saltToDelete = await _context.Salts.FirstOrDefaultAsync(s => s.SaltValue == salt.SaltValue);
+            var saltToDelete = await _context.Salts.FirstOrDefaultAsync();
             if (saltToDelete == null)
             {
-                _logger.LogError("There is no any salt with {s} value", salt.SaltValue);
+                _logger.LogError("There is no any salt");
                 return new Result<bool>(new NullReferenceException());
             }
 
-            _context.Salts.Remove((Salt)salt);
+            _context.Salts.Remove(saltToDelete);
             await _context.SaveChangesAsync();
             return new Result<bool>(true);
         }

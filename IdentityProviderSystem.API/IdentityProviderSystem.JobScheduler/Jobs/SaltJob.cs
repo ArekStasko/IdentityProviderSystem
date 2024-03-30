@@ -1,35 +1,63 @@
-﻿using IdentityProviderSystem.JobScheduler.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Quartz;
+﻿using Coravel.Invocable;
+using IdentityProviderSystem.Domain.Services.SaltService;
+using IdentityProviderSystem.Persistance.Repositories.SaltRepository;
+using Microsoft.Extensions.Logging;
 
-namespace IdentityProviderSystem.JobScheduler.ScheduleServices;
+namespace IdentityProviderSystem.JobScheduler.Jobs;
 
-public class SaltJob : WorkerJob
+public class SaltJob : IInvocable
 {
-    public static string JobName = "SaltJob";
-    public static string JobGroup = "SaltGroup";
-    public static string TriggerName = "SaltTrigger";
-    public static string TriggerGroup = "SaltTriggerGroup";
+    private readonly ISaltRepository _repository;
+    private readonly ISaltService _saltService;
+    private readonly ILogger<SaltJob> _logger;
 
-    public SaltJob() : base(
-        JobName, JobGroup, TriggerName, TriggerGroup, 
-        "SaltTriggerTime", typeof(SaltJob)
-    ){}
-    public override IJob GetJob(IServiceProvider serviceProvider)
+    public SaltJob(ISaltRepository repository, ISaltService saltService, ILogger<SaltJob> logger)
     {
-        return serviceProvider.GetService<SaltJob>();
+        _repository = repository;
+        _saltService = saltService;
+        _logger = logger;
     }
     
-    public override Task Execute(IJobExecutionContext context)
+    public async Task Invoke()
     {
         try
         {
-            Console.WriteLine("Running Salt Service");
-            return Task.CompletedTask;
+            var saltServiceResult = await _saltService.GenerateSalt();
+
+            var newSalt = saltServiceResult.Match(succ => succ, 
+                e =>
+            {
+                _logger.LogError("Salt service returns exception: {e}", e);
+                throw e;
+            });
+            
+            var deleteResult = await _repository.Delete();
+            var isDeleteSucceded = deleteResult.Match(succ => succ, e =>
+            {
+                _logger.LogError("Error occured while Salt job execution: {e}", e);
+                throw e;
+            });
+
+            if (isDeleteSucceded)
+            {
+                var addResult = await _repository.Add(newSalt);
+                var isAddSucceded = addResult.Match(succ => succ, e =>
+                {
+                    _logger.LogError("Error occured while add new salt execution: {e}", e);
+                    throw e;
+                });
+
+                if (isAddSucceded!)
+                {
+                    _logger.LogError("Add new salt failed while executing");
+                    throw new Exception("Add new salt failed while executing");
+                };
+            }
         }
         catch (Exception e)
         {
-            return Task.FromException(e);
+            _logger.LogError("Error occured while Salt job execution: {e}", e);
+            throw;
         }
     }
 }

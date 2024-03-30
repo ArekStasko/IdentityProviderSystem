@@ -34,6 +34,7 @@
     <ItemGroup>
       <ProjectReference Include="..\IdentityProviderSystem.Domain.Services\IdentityProviderSystem.Domain.Services.csproj" />
       <ProjectReference Include="..\IdentityProviderSystem.Domain\IdentityProviderSystem.Domain.csproj" />
+      <ProjectReference Include="..\IdentityProviderSystem.JobScheduler\IdentityProviderSystem.JobScheduler.csproj" />
       <ProjectReference Include="..\IdentityProviderSystem.Persistance\IdentityProviderSystem.Persistance.csproj" />
     </ItemGroup>
 

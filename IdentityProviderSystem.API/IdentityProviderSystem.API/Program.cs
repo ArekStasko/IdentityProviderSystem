@@ -1,4 +1,7 @@
+using Coravel;
 using IdentityProviderSystem.Domain.Services;
+using IdentityProviderSystem.JobScheduler;
+using IdentityProviderSystem.JobScheduler.Jobs;
 using IdentityProviderSystem.Persistance;
 using Serilog;
 
@@ -11,6 +14,7 @@ builder.Services.AddRepositories();
 builder.Services.AddDomainServices();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddServicesMapperProfile();
+builder.Services.AddJobs();
 
 var logger = new LoggerConfiguration()
     .ReadFrom
@@ -23,6 +27,11 @@ builder.Logging.AddSerilog(logger);
 var app = builder.Build();
 
 app.MigrateReadDatabase();
+
+app.Services.UseScheduler(scheduler =>
+{
+    scheduler.Schedule<SaltJob>().EveryFiveMinutes();
+});
 
 if (app.Environment.IsDevelopment())
 {

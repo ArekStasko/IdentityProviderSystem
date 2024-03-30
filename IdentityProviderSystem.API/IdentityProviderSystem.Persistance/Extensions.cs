@@ -17,6 +17,9 @@ public static class Extensions
             options
                 .UseSqlServer(connectionString);
         });
+
+        services.AddScoped<ISaltDataContext, DataContext>();
+        services.AddScoped<IUserDataContext, DataContext>();
     }
     
     public static void MigrateReadDatabase(this IApplicationBuilder app) => DataMigrationService.MigrationInitialization(app);

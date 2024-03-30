@@ -23,7 +23,8 @@ public class SaltService : ISaltService
             var result = await _repository.GetCurrent();
             return result.Match<Result<Guid>>(currentSalt =>
             {
-                if (currentSalt.SaltValue == uuid)return new Result<Guid>(Guid.NewGuid());
+                if (currentSalt.SaltValue == Guid.Empty)return new Result<Guid>(uuid);
+                if (currentSalt.SaltValue == uuid) return new Result<Guid>(Guid.NewGuid());
                 return new Result<Guid>(uuid);
             }, e =>
             {

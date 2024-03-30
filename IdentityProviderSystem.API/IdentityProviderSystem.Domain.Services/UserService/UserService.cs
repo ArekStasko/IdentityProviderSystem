@@ -24,7 +24,7 @@ public class UserService : IUserService
     {
         try
         {
-
+            throw new NotImplementedException();
         }
         catch (Exception e)
         {
@@ -37,7 +37,7 @@ public class UserService : IUserService
     {
         try
         {
-
+            throw new NotImplementedException();
         }
         catch (Exception e)
         {
@@ -50,7 +50,7 @@ public class UserService : IUserService
     {
         try
         {
-            
+            throw new NotImplementedException();
         }
         catch (Exception e)
         {

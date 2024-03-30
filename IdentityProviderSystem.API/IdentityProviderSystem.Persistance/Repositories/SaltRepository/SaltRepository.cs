@@ -25,8 +25,8 @@ public class SaltRepository : ISaltRepository
             var saltToDelete = await _context.Salts.FirstOrDefaultAsync();
             if (saltToDelete == null)
             {
-                _logger.LogError("There is no any salt");
-                return new Result<bool>(new NullReferenceException());
+                _logger.LogError("There is no salt");
+                return new Result<bool>(true);
             }
 
             _context.Salts.Remove(saltToDelete);
@@ -68,7 +68,7 @@ public class SaltRepository : ISaltRepository
             if (currentSalt == null)
             {
                 _logger.LogError("There is no any salt for now");
-                return new Result<ISalt>(new NullReferenceException());
+                return new Result<ISalt>(new Salt());
             }
 
             return new Result<ISalt>(currentSalt);

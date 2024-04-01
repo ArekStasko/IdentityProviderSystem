@@ -21,7 +21,7 @@ public class SaltService : ISaltService
         {
             var uuid = Guid.NewGuid();
             var result = await _repository.GetCurrent();
-            return result.Match<Result<Guid>>(currentSalt =>
+            return result.Match(currentSalt =>
             {
                 if (currentSalt.SaltValue == Guid.Empty)return new Result<Guid>(uuid);
                 if (currentSalt.SaltValue == uuid) return new Result<Guid>(Guid.NewGuid());
@@ -35,6 +35,24 @@ public class SaltService : ISaltService
         catch (Exception e)
         {
             _logger.LogError("Generate Salt failed with an exception: {e}", e);            
+            return new Result<Guid>(e);
+        }
+    }
+
+    public async Task<Result<Guid>> GetCurrentSalt()
+    {
+        try
+        {
+            var result = await _repository.GetCurrent();
+            return result.Match(succ => succ.SaltValue, e =>
+            {
+                _logger.LogError("Get current salt failed with an exception: {e}", e);
+                return new Result<Guid>(e);
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Get current Salt failed with an exception: {e}", e);            
             return new Result<Guid>(e);
         }
     }

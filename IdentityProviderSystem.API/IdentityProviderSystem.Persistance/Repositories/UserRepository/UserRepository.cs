@@ -20,11 +20,11 @@ public class UserRepository : IUserRepository
         _logger = logger;
     }
     
-    public async Task<Result<bool>> Create(User user)
+    public async Task<Result<bool>> Create(IUser user)
     {
         try
         {
-            await _context.Users.AddAsync(user);
+            await _context.Users.AddAsync((User)user);
             return new Result<bool>(true);
         }
         catch (Exception e)
@@ -34,7 +34,7 @@ public class UserRepository : IUserRepository
         }
     }
 
-    public async Task<Result<bool>> Update(User user)
+    public async Task<Result<bool>> Update(IUser user)
     {
         try
         {

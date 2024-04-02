@@ -9,12 +9,6 @@ public class ControllersMapperProfile : Profile
 {
     public ControllersMapperProfile()
     {
-        CreateMap<LoginUser, UserDTO>()
-            .ForMember(u => u.Username, opts => opts.MapFrom(src => src.Username))
-            .ForMember(u => u.Hash, opts => opts.MapFrom(src => src.Hash));
-        
-        CreateMap<RegisterUser, UserDTO>()
-            .ForMember(u => u.Username, opts => opts.MapFrom(src => src.Username))
-            .ForMember(u => u.Hash, opts => opts.MapFrom(src => src.Hash));
+   
     }
 }

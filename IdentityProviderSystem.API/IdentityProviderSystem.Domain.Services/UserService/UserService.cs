@@ -95,7 +95,41 @@ public class UserService : IUserService
     {
         try
         {
-            throw new NotImplementedException();
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var currentSaltResult = await _saltService.GetCurrentSalt();
+            var currentSalt = currentSaltResult.Match<Guid>(salt => salt, e =>
+            {
+                _logger.LogError("Salt service failed while getting current salt: {e}", e);
+                return Guid.Empty;
+            });
+            if (currentSalt == Guid.Empty) return new Result<bool>(new NullReferenceException("There is no current salt"));
+            
+            var key = currentSalt.ToByteArray();
+            var parameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+            
+            SecurityToken securityToken;
+            _ = tokenHandler.ValidateToken(user.JWT, parameters, out securityToken);
+            JwtSecurityToken jwtToken = (JwtSecurityToken)securityToken;
+
+            var pwdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "password");
+            
+            var getUserResult = await _repository.Get(user.Username);
+            var userToLogin = getUserResult.Match<User?>(usr => usr, e =>
+            {
+                _logger.LogError("Get user repository method failed while processing: {e}", e);
+                return null;
+            });
+            if (userToLogin == null) return new Result<bool>(false);
+
+            var hashToVerify = GetHash(pwdClaim.Value, userToLogin.Salt.ToString());
+            var verifyLogin = VerifyHash(hashToVerify, userToLogin.Hash);
+            return new Result<bool>(verifyLogin);
         }
         catch (Exception e)
         {
@@ -118,5 +152,5 @@ public class UserService : IUserService
     }
 
     private string GetHash(string pwd, string salt) => BCrypt.Net.BCrypt.HashPassword(pwd, salt);
-    
+    private bool VerifyHash(string pwd, string hash) => BCrypt.Net.BCrypt.Verify(pwd, hash);
 }

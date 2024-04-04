@@ -1,5 +1,6 @@
 ﻿using IdentityProviderSystem.Persistance.Interfaces;
 using IdentityProviderSystem.Persistance.Repositories.SaltRepository;
+using IdentityProviderSystem.Persistance.Repositories.TokenRepository;
 using IdentityProviderSystem.Persistance.Repositories.UserRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ public static class Extensions
 
         services.AddScoped<ISaltDataContext, DataContext>();
         services.AddScoped<IUserDataContext, DataContext>();
+        services.AddScoped<ITokenDataContext, DataContext>();
     }
     
     public static void MigrateReadDatabase(this IApplicationBuilder app) => DataMigrationService.MigrationInitialization(app);
@@ -28,6 +30,7 @@ public static class Extensions
     {
         serivces.AddScoped<IUserRepository, UserRepository>();
         serivces.AddScoped<ISaltRepository, SaltRepository>();
+        serivces.AddScoped<ITokenRepository, TokenRepository>();
     }
     
     private static string GetConnectionString()

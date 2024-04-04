@@ -1,11 +1,12 @@
 ﻿using IdentityProviderSystem.Domain.Models.Salt;
+using IdentityProviderSystem.Domain.Models.Token;
 using IdentityProviderSystem.Domain.Models.User;
 using IdentityProviderSystem.Persistance.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityProviderSystem.Persistance;
 
-public class DataContext : DbContext, IUserDataContext, ISaltDataContext
+public class DataContext : DbContext, IUserDataContext, ISaltDataContext, ITokenDataContext
 {
     public DataContext(){}
 
@@ -13,4 +14,5 @@ public class DataContext : DbContext, IUserDataContext, ISaltDataContext
 
     public virtual DbSet<Salt> Salts { get; set; }
     public virtual DbSet<User> Users { get; set; }
+    public DbSet<Token> Tokens { get; set; }
 }

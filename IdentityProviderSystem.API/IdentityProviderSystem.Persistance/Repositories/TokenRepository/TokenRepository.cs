@@ -65,7 +65,6 @@ public class TokenRepository : ITokenRepository
                 return new Result<IToken>(new NullReferenceException());
             }
 
-            tokenToUpdate.DateOfExp = token.DateOfExp;
             await _cotnext.SaveChangesAsync();
             return new Result<IToken>(tokenToUpdate);
         }
@@ -76,17 +75,22 @@ public class TokenRepository : ITokenRepository
         }
     }
 
-    public async Task<Result<List<IToken>>> Get()
+    public async Task<Result<IToken>> Get(int userId)
     { 
         try
         {
-            var tokens = await _cotnext.Tokens.ToListAsync<IToken>();
-            return new Result<List<IToken>>(tokens);
+            var token = await _cotnext.Tokens.FirstOrDefaultAsync(t => t.UserId == userId);
+            if (token == null)
+            {
+                _logger.LogError("User with {id} Id doesnt have any valid tokens");
+                return new Result<IToken>(new NullReferenceException());
+            }
+            return new Result<IToken>(token);
         }
         catch (Exception e)
         {
-            _logger.LogError("Get tokens repository method failed with an exception: {e}", e);
-            return new Result<List<IToken>>(e);
+            _logger.LogError("Get token repository method failed with an exception: {e}", e);
+            return new Result<IToken>(e);
         }
     }
 }

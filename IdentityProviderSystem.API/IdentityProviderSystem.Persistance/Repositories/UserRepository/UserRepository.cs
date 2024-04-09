@@ -20,17 +20,18 @@ public class UserRepository : IUserRepository
         _logger = logger;
     }
     
-    public async Task<Result<bool>> Create(IUser user)
+    public async Task<Result<int>> Create(IUser user)
     {
         try
         {
             await _context.Users.AddAsync((User)user);
-            return new Result<bool>(true);
+            await _context.SaveChangesAsync();
+            return new Result<int>(user.Id);
         }
         catch (Exception e)
         {
             _logger.LogError("Create User failed with an exception: {e}", e);            
-            return new Result<bool>(e);
+            return new Result<int>(e);
         }
     }
 

@@ -31,6 +31,7 @@ app.MigrateReadDatabase();
 app.Services.UseScheduler(scheduler =>
 {
     scheduler.Schedule<SaltJob>().EveryFiveMinutes();
+    scheduler.Schedule<TokenJob>().EveryMinute();
 });
 
 if (app.Environment.IsDevelopment())

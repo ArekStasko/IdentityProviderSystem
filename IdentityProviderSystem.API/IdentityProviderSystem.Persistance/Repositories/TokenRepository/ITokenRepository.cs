@@ -9,4 +9,5 @@ public interface ITokenRepository
     public Task<Result<IToken>> Create(IToken token);
     public Task<Result<IToken>> Update(IToken token);
     public Task<Result<IToken>> Get(int userId);
+    public Task<Result<IList<IToken>>> Get();
 }

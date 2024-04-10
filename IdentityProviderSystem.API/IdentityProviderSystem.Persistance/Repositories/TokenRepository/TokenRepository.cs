@@ -93,4 +93,18 @@ public class TokenRepository : ITokenRepository
             return new Result<IToken>(e);
         }
     }
+    
+    public async Task<Result<IList<IToken>>> Get()
+    { 
+        try
+        {
+            var tokens = await _cotnext.Tokens.ToListAsync<IToken>();
+            return new Result<IList<IToken>>(tokens);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Get token repository method failed with an exception: {e}", e);
+            return new Result<IList<IToken>>(e);
+        }
+    }
 }

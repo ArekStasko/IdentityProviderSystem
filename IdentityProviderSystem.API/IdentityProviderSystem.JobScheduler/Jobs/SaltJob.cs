@@ -52,6 +52,7 @@ public class SaltJob : IInvocable
                     _logger.LogError("Add new salt failed while executing: {result}", isAddSucceded);
                     throw new Exception("Add new salt failed while executing");
                 };
+                
             }
         }
         catch (Exception e)

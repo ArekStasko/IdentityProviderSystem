@@ -41,6 +41,36 @@ namespace IdentityProviderSystem.Persistance.Migrations
                     b.ToTable("Salts");
                 });
 
+            modelBuilder.Entity("IdentityProviderSystem.Domain.Models.Token.Token", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateOfExp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Secret")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Tokens");
+                });
+
             modelBuilder.Entity("IdentityProviderSystem.Domain.Models.User.User", b =>
                 {
                     b.Property<int>("Id")
@@ -49,13 +79,12 @@ namespace IdentityProviderSystem.Persistance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<byte[]>("Hash")
+                    b.Property<string>("Hash")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Salt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.Property<Guid>("Salt")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -64,6 +93,21 @@ namespace IdentityProviderSystem.Persistance.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("IdentityProviderSystem.Domain.Models.Token.Token", b =>
+                {
+                    b.HasOne("IdentityProviderSystem.Domain.Models.User.User", null)
+                        .WithOne("Token")
+                        .HasForeignKey("IdentityProviderSystem.Domain.Models.Token.Token", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("IdentityProviderSystem.Domain.Models.User.User", b =>
+                {
+                    b.Navigation("Token")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

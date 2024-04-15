@@ -8,7 +8,7 @@ namespace IdentityProviderSystem.Controllers.User;
 
 [Route("api/idp-v1/user/[action]")]
 [ApiController]
-public class UserController
+public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IMapper _mapper;

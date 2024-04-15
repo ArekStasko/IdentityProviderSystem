@@ -24,7 +24,7 @@ public static class Extensions
         services.AddScoped<ITokenDataContext, DataContext>();
     }
     
-    public static void MigrateReadDatabase(this IApplicationBuilder app) => DataMigrationService.MigrationInitialization(app);
+    public static void MigrateDatabase(this IApplicationBuilder app) => DataMigrationService.MigrationInitialization(app);
     
     public static void AddRepositories(this IServiceCollection serivces)
     {

@@ -5,8 +5,18 @@ using IdentityProviderSystem.JobScheduler.Jobs;
 using IdentityProviderSystem.Persistance;
 using Serilog;
 
+const string AllowSpecifiOrigin = "AllowSpecificOrigin";
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options
+        .AddPolicy(name: AllowSpecifiOrigin, policy => policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+        );
+});
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDataContext();
@@ -15,6 +25,7 @@ builder.Services.AddDomainServices();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddServicesMapperProfile();
 builder.Services.AddJobs();
+builder.WebHost.UseKestrel();
 
 var logger = new LoggerConfiguration()
     .ReadFrom
@@ -26,7 +37,8 @@ builder.Logging.AddSerilog(logger);
 
 var app = builder.Build();
 
-app.MigrateReadDatabase();
+app.MigrateDatabase();
+app.UseCors(AllowSpecifiOrigin);
 
 app.Services.UseScheduler(scheduler =>
 {
@@ -40,5 +52,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthorization();
+
 app.UseHttpsRedirection();
+app.MapControllers();
 app.Run();

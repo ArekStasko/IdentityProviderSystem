@@ -40,7 +40,7 @@ public class SaltRepository : ISaltRepository
         }
     }
 
-    public async Task<Result<bool>> Add(Guid saltValue)
+    public async Task<Result<bool>> Add(string saltValue)
     {
         try
         {

@@ -4,5 +4,5 @@ public interface ISalt
 {
     public int Id { get; set; }
     public DateTime DateOfGeneration { get; set; }
-    public Guid SaltValue { get; set; }
+    public string SaltValue { get; set; }
 }

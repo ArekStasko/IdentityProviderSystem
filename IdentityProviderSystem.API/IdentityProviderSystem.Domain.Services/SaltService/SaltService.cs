@@ -1,4 +1,5 @@
 ﻿using IdentityProviderSystem.Persistance.Repositories.SaltRepository;
+using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
 
@@ -15,31 +16,35 @@ public class SaltService : ISaltService
         _logger = logger;
     }
     
-    public async Task<Result<Guid>> GenerateSalt()
+    public async Task<Result<string>> GenerateSalt()
     {
         try
         {
-            var uuid = Guid.NewGuid();
+            var hash = BCrypt.Net.BCrypt.GenerateSalt();
+            if (hash == null)
+            {
+                return new Result<string>(new Exception("Generated salt is null"));
+            }
             var result = await _repository.GetCurrent();
             return result.Match(currentSalt =>
             {
-                if (currentSalt.SaltValue == Guid.Empty)return new Result<Guid>(uuid);
-                if (currentSalt.SaltValue == uuid) return new Result<Guid>(Guid.NewGuid());
-                return new Result<Guid>(uuid);
+                if (currentSalt.SaltValue == "")return new Result<string>(hash);
+                if (currentSalt.SaltValue == hash) return new Result<string>(BCrypt.Net.BCrypt.GenerateSalt());
+                return new Result<string>(hash);
             }, e =>
             {
                 _logger.LogError("Generate Salt failed with error from salt repository: {e}", e);
-                return new Result<Guid>(e);
+                return new Result<string>(e);
             });
         }
         catch (Exception e)
         {
             _logger.LogError("Generate Salt failed with an exception: {e}", e);            
-            return new Result<Guid>(e);
+            return new Result<string>(e);
         }
     }
 
-    public async Task<Result<Guid>> GetCurrentSalt()
+    public async Task<Result<string>> GetCurrentSalt()
     {
         try
         {
@@ -47,13 +52,13 @@ public class SaltService : ISaltService
             return result.Match(succ => succ.SaltValue, e =>
             {
                 _logger.LogError("Get current salt failed with an exception: {e}", e);
-                return new Result<Guid>(e);
+                return new Result<string>(e);
             });
         }
         catch (Exception e)
         {
             _logger.LogError("Get current Salt failed with an exception: {e}", e);            
-            return new Result<Guid>(e);
+            return new Result<string>(e);
         }
     }
 }

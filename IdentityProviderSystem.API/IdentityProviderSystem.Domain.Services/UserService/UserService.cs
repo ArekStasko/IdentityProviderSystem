@@ -32,10 +32,10 @@ public class UserService : IUserService
         try
         {
             var generateSaltResult = await _saltService.GenerateSalt();
-            var hashSalt = generateSaltResult.Match<Guid>(salt => salt, e =>
+            var hashSalt = generateSaltResult.Match<string>(salt => salt, e =>
             {
                 _logger.LogError("Salt service failed while generating salt: {e}", e);
-                return Guid.Empty;
+                return "";
             });
 
             var hash = GetHash(user.Password, hashSalt.ToString());

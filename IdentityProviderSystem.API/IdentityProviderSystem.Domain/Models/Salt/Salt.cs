@@ -4,5 +4,5 @@ public class Salt : ISalt
 {
     public int Id { get; set; }
     public DateTime DateOfGeneration { get; set; }
-    public Guid SaltValue { get; set; } = Guid.Empty;
+    public string SaltValue { get; set; } = "";
 }

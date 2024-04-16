@@ -4,6 +4,6 @@ namespace IdentityProviderSystem.Domain.Services.SaltService;
 
 public interface ISaltService
 {
-    public Task<Result<Guid>> GenerateSalt();
-    public Task<Result<Guid>> GetCurrentSalt();
+    public Task<Result<string>> GenerateSalt();
+    public Task<Result<string>> GetCurrentSalt();
 }

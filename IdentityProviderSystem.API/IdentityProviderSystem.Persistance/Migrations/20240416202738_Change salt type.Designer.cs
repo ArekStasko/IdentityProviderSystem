@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityProviderSystem.Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240413143847_Add token repo")]
-    partial class Addtokenrepo
+    [Migration("20240416202738_Change salt type")]
+    partial class Changesalttype
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,8 +36,9 @@ namespace IdentityProviderSystem.Persistance.Migrations
                     b.Property<DateTime>("DateOfGeneration")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("SaltValue")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("SaltValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -86,8 +87,9 @@ namespace IdentityProviderSystem.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("Salt")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()

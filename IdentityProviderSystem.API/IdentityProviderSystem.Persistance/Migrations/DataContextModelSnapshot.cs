@@ -33,8 +33,9 @@ namespace IdentityProviderSystem.Persistance.Migrations
                     b.Property<DateTime>("DateOfGeneration")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("SaltValue")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("SaltValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -83,8 +84,9 @@ namespace IdentityProviderSystem.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("Salt")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()

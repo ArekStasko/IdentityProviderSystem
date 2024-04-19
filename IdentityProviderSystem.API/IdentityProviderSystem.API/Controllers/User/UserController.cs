@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IdentityProviderSystem.Domain.DTO;
 using IdentityProviderSystem.Domain.Interfaces;
+using IdentityProviderSystem.Domain.Models.Token;
 using IdentityProviderSystem.Domain.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
 

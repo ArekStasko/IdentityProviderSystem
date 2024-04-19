@@ -27,7 +27,7 @@ public class UserService : IUserService
         _logger = logger;
     }
     
-    public async Task<Result<IToken>> Register(UserDTO user)
+    public async Task<Result<ITokenResponse>> Register(UserDTO user)
     {
         try
         {
@@ -53,16 +53,21 @@ public class UserService : IUserService
                 throw e;
             });
 
-            return await _tokenService.Generate(userId);
+            var token = await _tokenService.Generate(userId);
+            return token.Match(succ => new Result<ITokenResponse>((ITokenResponse)succ), err =>
+            {
+                _logger.LogError("Token service failed while generating token: {e}", err);
+                return new Result<ITokenResponse>(err);
+            });
         }
         catch (Exception e)
         {
             _logger.LogError("Register user service throw an exception: {e}", e);
-            return new Result<IToken>(e);
+            return new Result<ITokenResponse>(e);
         }
     }
 
-    public async Task<Result<IToken>> Login(UserDTO user)
+    public async Task<Result<ITokenResponse>> Login(UserDTO user)
     {
         try
         {
@@ -72,25 +77,30 @@ public class UserService : IUserService
                 _logger.LogError("Get user repository method failed while processing: {e}", e);
                 return null;
             });
-            if (userToLogin == null) return new Result<IToken>(new NullReferenceException());
+            if (userToLogin == null) return new Result<ITokenResponse>(new NullReferenceException());
 
-            var hashToVerify = GetHash(user.Password, userToLogin.Salt.ToString());
+            var hashToVerify = GetHash(user.Password, userToLogin.Salt);
             var verifyLogin = VerifyHash(hashToVerify, userToLogin.Hash);
             if (verifyLogin)
             {
-                return await _tokenService.Generate(userToLogin.Id);
+                var token = await _tokenService.Generate(userToLogin.Id);
+                return token.Match(succ => new Result<ITokenResponse>((ITokenResponse)succ), err =>
+                {
+                    _logger.LogError("Token service failed while generating token: {e}", err);
+                    return new Result<ITokenResponse>(err);
+                });
             }
 
-            return new Result<IToken>(new InvalidOperationException());
+            return new Result<ITokenResponse>(new InvalidOperationException());
         }
         catch (Exception e)
         {
             _logger.LogError("Login user service throw an exception: {e}", e);
-            return new Result<IToken>(e);
+            return new Result<ITokenResponse>(e);
         }
     }
 
-    public async Task<Result<bool>> GetStatus(string username )
+    public async Task<Result<bool>> GetStatus(string username)
     {
         try
         {

@@ -7,7 +7,7 @@ namespace IdentityProviderSystem.Domain.Services.UserService;
 
 public interface IUserService
 {
-    public Task<Result<IToken>> Register(UserDTO user);
-    public Task<Result<IToken>> Login(UserDTO user);
+    public Task<Result<ITokenResponse>> Register(UserDTO user);
+    public Task<Result<ITokenResponse>> Login(UserDTO user);
     public Task<Result<bool>> GetStatus(string username);
 }

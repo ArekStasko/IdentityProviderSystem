@@ -100,19 +100,6 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<Result<bool>> GetStatus(string username)
-    {
-        try
-        {
-            throw new NotImplementedException();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("Get user status service throw an exception: {e}", e);
-            return new Result<bool>(e);
-        }
-    }
-
     private string GetHash(string pwd, string salt) => BCrypt.Net.BCrypt.HashPassword(pwd, salt);
     private bool VerifyHash(string pwd, string hash) => BCrypt.Net.BCrypt.Verify(pwd, hash);
 }

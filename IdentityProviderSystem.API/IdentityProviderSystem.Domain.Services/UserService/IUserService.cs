@@ -9,5 +9,4 @@ public interface IUserService
 {
     public Task<Result<ITokenResponse>> Register(UserDTO user);
     public Task<Result<ITokenResponse>> Login(UserDTO user);
-    public Task<Result<bool>> GetStatus(string username);
 }

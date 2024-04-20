@@ -79,8 +79,7 @@ public class UserService : IUserService
             });
             if (userToLogin == null) return new Result<ITokenResponse>(new NullReferenceException());
 
-            var hashToVerify = GetHash(user.Password, userToLogin.Salt);
-            var verifyLogin = VerifyHash(hashToVerify, userToLogin.Hash);
+            var verifyLogin = VerifyHash(user.Password, userToLogin.Hash);
             if (verifyLogin)
             {
                 var token = await _tokenService.Generate(userToLogin.Id);

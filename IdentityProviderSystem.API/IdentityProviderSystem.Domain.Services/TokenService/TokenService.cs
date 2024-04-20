@@ -47,6 +47,15 @@ public class TokenService : ITokenService
     {
         try
         {
+            var existingTokensResult = await _repository.Get();
+            var existingTokens = existingTokensResult.Match(tokens => tokens, e =>
+            {
+                _logger.LogError("Generate Token service failed while getting tokens: {e}", e );
+                throw e;
+            });
+            var existingToken = existingTokens.FirstOrDefault(t => t.UserId == userId);
+            if (existingToken != null) return new Result<IToken>(existingToken);
+                
             DateTime value = DateTime.Now.AddMinutes(10.0);
             var result = await _saltService.GenerateSalt();
 

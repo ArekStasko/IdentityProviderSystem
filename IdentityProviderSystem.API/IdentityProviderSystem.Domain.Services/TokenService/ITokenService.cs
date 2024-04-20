@@ -5,7 +5,8 @@ namespace IdentityProviderSystem.Domain.Services.TokenService;
 
 public interface ITokenService
 {
-    public Task<Result<IToken>> Get(int userId);
-    public Task<Result<IToken>> Generate(int userId);
-    public Task<Result<bool>> CheckExp(string token);
+    Task<Result<IToken>> Get(int userId);
+    Task<Result<IToken>> Generate(int userId);
+    Task<Result<bool>> RefreshToken(string token);
+    Task<Result<bool>> CheckExp(string token);
 }

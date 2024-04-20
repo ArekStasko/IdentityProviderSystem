@@ -19,6 +19,16 @@ public class TokenController : ControllerBase
         _logger = logger;
     }
     
+    [HttpGet(Name = "[controller]/refreshToken")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Exception))]
+    public async ValueTask<IActionResult> RefreshToken(string token)
+    {
+        _logger.LogInformation("Check token expiration endpoint starts processing");
+        var result = await _tokenService.RefreshToken(token);
+        return result.ToOk();
+    }
+    
     [HttpGet(Name = "[controller]/checkTokenExp")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Exception))]

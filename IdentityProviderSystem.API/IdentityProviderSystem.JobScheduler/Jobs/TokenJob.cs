@@ -30,6 +30,13 @@ public class TokenJob : IInvocable
             
             foreach (IToken token in tokens)
             {
+                if (token.Alive)
+                {
+                    token.Alive = false;
+                    await _repository.Update(token);
+                    return;
+                }
+                
                 JwtSecurityToken tokenToValidate = new JwtSecurityToken(token.Value);
                 bool isExpired = tokenToValidate.ValidTo < DateTime.UtcNow;
                 if (isExpired)

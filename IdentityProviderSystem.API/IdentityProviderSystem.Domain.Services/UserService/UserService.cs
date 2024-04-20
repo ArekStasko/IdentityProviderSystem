@@ -38,12 +38,11 @@ public class UserService : IUserService
                 return "";
             });
 
-            var hash = GetHash(user.Password, hashSalt.ToString());
+            var hash = GetHash(user.Password, hashSalt);
             IUser newUser = new User()
             {
                 Username = user.Username,
                 Hash = hash,
-                Salt = hashSalt
             };
             var createUserResult = await _repository.Create(newUser);
 

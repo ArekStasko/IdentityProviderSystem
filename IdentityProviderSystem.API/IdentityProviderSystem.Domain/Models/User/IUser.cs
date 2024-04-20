@@ -6,5 +6,4 @@ public interface IUser
     public Token.Token Token { get; set; }
     public string Username { get; set; }
     public string Hash { get; set; }
-    public string Salt { get; set; }
 }

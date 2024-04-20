@@ -1,0 +1,32 @@
+services:
+    identityprovidersystem-database:
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        container_name: identityprovidersystem-database
+        environment:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "Password.1234"
+        ports:
+            - "1433:1433"
+    identityprovidersystem-logger:
+        image: datalust/seq:latest
+        container_name: identityprovidersystem-logger
+        ports:
+            - "5341:80"
+        environment:
+            ACCEPT_EULA: "Y"
+        restart: unless-stopped
+        depends_on:
+            - identityprovidersystem-database
+    identityprovidersystem-api:
+        build: ./IdentityProviderSystem.API
+        container_name: identityprovidersystem-api
+        environment:
+            DatabaseServer: "identityprovidersystem-database"
+            DatabasePort: "1433"
+            DatabaseUser: "sa"
+            DatabasePassword: "Password.1234"
+            DatabaseName: "IdP_DB"
+        depends_on:
+            - identityprovidersystem-logger
+        ports:
+            - "8080:8080"

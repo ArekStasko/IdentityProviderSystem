@@ -1,13 +1,14 @@
-import {Box, Typography} from "@mui/material";
-
+import {Box} from "@mui/material";
+import Login from "../../components/login/Login";
+import styles from "./MainPage.styles"
 
 export const MainPage = () => {
 
     return(
-        <Box>
-           <Typography>
-               Main Page
-           </Typography>
+        <Box sx={styles.mainPageContainer}>
+           <Box sx={styles.contentWrapper}>
+               <Login/>
+           </Box>
         </Box>
     )
 }

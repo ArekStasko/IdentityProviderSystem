@@ -4,20 +4,35 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Validators from "../../common/validators/Validators";
 import styles from './Login.styles'
+import {LoginRequest, useLoginMutation} from "../../common/slices/login";
 
 
 export const Login = () => {
+    const [login] = useLoginMutation();
 
     const formMethods = useForm({
         mode: 'onChange',
         resolver: yupResolver(Validators.login)
     })
 
+    const loginUser = async () => {
+        const loginRequest = {
+            Username: formMethods.getValues("username"),
+            Password: formMethods.getValues("password")
+        } as LoginRequest
+        const result = await login(loginRequest)
+        if("data" in result){
+            console.log(result.data)
+        }
+    }
+
     return (
         <Box sx={styles.Container}>
-                <Typography>
+            <Box sx={styles.TitleWrapper}>
+                <Typography sx={styles.Title}>
                     Login
                 </Typography>
+            </Box>
                 <Box sx={styles.FieldWrapper}>
                     <TextField
                         {...formMethods.register('username')}
@@ -46,7 +61,7 @@ export const Login = () => {
                 </Box>
             <Box sx={styles.ButtonWrapper}>
                 <Link href="#">I don`t have an acount</Link>
-                <Button variant="contained">Login</Button>
+                <Button disabled={!formMethods.formState.isValid} onClick={() => loginUser()} variant="contained">Login</Button>
             </Box>
         </Box>
     )

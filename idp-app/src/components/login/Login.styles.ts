@@ -28,9 +28,25 @@ const ButtonWrapper = {
     justifyContent: "space-between"
 }
 
+
+const TitleWrapper = {
+    width: "80%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+}
+
+const Title = {
+    color: "white",
+    fontSize: 22,
+}
+
+
 export default {
     Container,
     FieldWrapper,
     Field,
-    ButtonWrapper
+    ButtonWrapper,
+    TitleWrapper,
+    Title
 }

@@ -8,7 +8,7 @@ const mainPageContainer = {
 
 const contentWrapper = {
     width: "40%",
-    height: "90%",
+    height: "100%",
     backgroundColor: "#4d4e5a",
     display: "flex",
     flexDirection: "column",

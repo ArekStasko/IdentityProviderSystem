@@ -6,9 +6,11 @@ import Validators from "../../common/validators/Validators";
 import styles from './Login.styles'
 import {LoginRequest, useLoginMutation} from "../../common/slices/login";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router";
 
 
 export const Login = () => {
+    const navigate = useNavigate();
     const [login, {isLoading, isError}] = useLoginMutation();
     const formMethods = useForm({
         mode: 'onChange',
@@ -73,7 +75,7 @@ export const Login = () => {
                     </Box>
                 ) : (
                     <Box sx={styles.ButtonWrapper}>
-                        <Link href="#">I don`t have an acount</Link>
+                        <Link onClick={() => navigate("/idp-register")}>I don`t have an acount</Link>
                         <Button disabled={!formMethods.formState.isValid} onClick={() => loginUser()} variant="contained">Login</Button>
                     </Box>
                 )

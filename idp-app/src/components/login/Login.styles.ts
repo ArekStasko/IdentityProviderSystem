@@ -41,6 +41,13 @@ const Title = {
     fontSize: 22,
 }
 
+const LoadingWrapper = {
+    width: "80%"
+}
+
+const AlertWrapper = {
+    width: '80%'
+}
 
 export default {
     Container,
@@ -48,5 +55,7 @@ export default {
     Field,
     ButtonWrapper,
     TitleWrapper,
-    Title
+    Title,
+    LoadingWrapper,
+    AlertWrapper
 }

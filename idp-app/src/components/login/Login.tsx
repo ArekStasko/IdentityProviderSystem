@@ -1,15 +1,15 @@
-import {Box, Button, InputAdornment, Link, TextField, Typography} from "@mui/material";
+import {Alert, Box, Button, InputAdornment, LinearProgress, Link, TextField, Typography} from "@mui/material";
 import {useForm} from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Validators from "../../common/validators/Validators";
 import styles from './Login.styles'
 import {LoginRequest, useLoginMutation} from "../../common/slices/login";
+import {useEffect, useState} from "react";
 
 
 export const Login = () => {
-    const [login] = useLoginMutation();
-
+    const [login, {isLoading, isError}] = useLoginMutation();
     const formMethods = useForm({
         mode: 'onChange',
         resolver: yupResolver(Validators.login)
@@ -32,6 +32,13 @@ export const Login = () => {
                 <Typography sx={styles.Title}>
                     Login
                 </Typography>
+            </Box>
+            <Box sx={styles.AlertWrapper}>
+                {
+                    isError && (
+                        <Alert severity="error">Wrong Username or Password.</Alert>
+                    )
+                }
             </Box>
                 <Box sx={styles.FieldWrapper}>
                     <TextField
@@ -59,10 +66,18 @@ export const Login = () => {
                         sx={styles.Field}
                     />
                 </Box>
-            <Box sx={styles.ButtonWrapper}>
-                <Link href="#">I don`t have an acount</Link>
-                <Button disabled={!formMethods.formState.isValid} onClick={() => loginUser()} variant="contained">Login</Button>
-            </Box>
+            {
+                isLoading ? (
+                    <Box sx={styles.LoadingWrapper}>
+                        <LinearProgress />
+                    </Box>
+                ) : (
+                    <Box sx={styles.ButtonWrapper}>
+                        <Link href="#">I don`t have an acount</Link>
+                        <Button disabled={!formMethods.formState.isValid} onClick={() => loginUser()} variant="contained">Login</Button>
+                    </Box>
+                )
+            }
         </Box>
     )
 }

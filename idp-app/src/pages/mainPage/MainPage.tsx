@@ -1,13 +1,17 @@
 import {Box} from "@mui/material";
-import Login from "../../components/login/Login";
 import styles from "./MainPage.styles"
+import {FunctionComponent, ReactElement} from "react";
 
-export const MainPage = () => {
+type MainPageProps = {
+    children: ReactElement;
+};
+
+export const MainPage: FunctionComponent<MainPageProps> = ({ children }) => {
 
     return(
         <Box sx={styles.mainPageContainer}>
            <Box sx={styles.contentWrapper}>
-               <Login/>
+               {children}
            </Box>
         </Box>
     )

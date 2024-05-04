@@ -1,4 +1,3 @@
-
 const Container = {
     width: "70%",
     height: "70%",

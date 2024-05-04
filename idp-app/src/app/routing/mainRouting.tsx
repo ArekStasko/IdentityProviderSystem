@@ -3,16 +3,17 @@ import RoutingConstants from './routingConstants';
 import React from 'react';
 import MainPage from "../../pages/mainPage/MainPage";
 import Register from "../../components/register/Register";
+import Login from "../../components/login/Login";
 
 export const MainRouting = () => (
     <Routes>
         <Route
             path={RoutingConstants.root}
-            element={<MainPage />}
+            element={<MainPage><Login/></MainPage>}
         />
         <Route
             path={RoutingConstants.register}
-            element={<Register />}
+            element={<MainPage><Register /></MainPage>}
         />
     </Routes>
 );

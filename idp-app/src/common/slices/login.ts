@@ -1,4 +1,5 @@
 import emptyApi from "../../app/api/emptyApi";
+import {UserData} from "../cookies/cookieService";
 
 export type LoginRequest = {
     Username: string,
@@ -7,7 +8,7 @@ export type LoginRequest = {
 
 export const loginApi = emptyApi.injectEndpoints({
     endpoints: (build) => ({
-        Login: build.mutation<string, LoginRequest>({
+        Login: build.mutation<UserData, LoginRequest>({
             query: ({ ...data }) => ({
                 url: '/user/login',
                 method: 'POST',

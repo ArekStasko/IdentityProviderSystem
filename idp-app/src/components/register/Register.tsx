@@ -7,6 +7,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import Validators from "../../common/validators/Validators";
 import routingConstants from "../../app/routing/routingConstants";
 import {RegisterRequest, useRegisterMutation} from "../../common/slices/register";
+import {SaveUserData} from "../../common/cookies/cookieService";
 
 
 export const Register = () => {
@@ -25,7 +26,7 @@ export const Register = () => {
         } as RegisterRequest
         const result = await register(registerRequest)
         if("data" in result){
-            console.log(result.data)
+            SaveUserData(result.data)
         }
     }
 
@@ -39,7 +40,7 @@ export const Register = () => {
             <Box sx={styles.AlertWrapper}>
                 {
                     isError && (
-                        <Alert severity="error">Wrong Username or Password.</Alert>
+                        <Alert severity="error">Sorry, something went wrong.</Alert>
                     )
                 }
             </Box>

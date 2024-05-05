@@ -1,4 +1,5 @@
 import emptyApi from "../../app/api/emptyApi";
+import {UserData} from "../cookies/cookieService";
 
 export type RegisterRequest = {
     Username: string,
@@ -8,7 +9,7 @@ export type RegisterRequest = {
 
 export const registerApi = emptyApi.injectEndpoints({
     endpoints: (build) => ({
-        Register: build.mutation<string, RegisterRequest>({
+        Register: build.mutation<UserData, RegisterRequest>({
             query: ({ ...data }) => ({
                 url: '/user/register',
                 method: 'POST',

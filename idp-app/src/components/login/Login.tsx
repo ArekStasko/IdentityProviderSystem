@@ -7,6 +7,7 @@ import styles from "../../common/styles/styles";
 import {LoginRequest, useLoginMutation} from "../../common/slices/login";
 import {useNavigate} from "react-router";
 import routingConstants from "../../app/routing/routingConstants";
+import {SaveUserData} from "../../common/cookies/cookieService";
 
 
 export const Login = () => {
@@ -24,7 +25,7 @@ export const Login = () => {
         } as LoginRequest
         const result = await login(loginRequest)
         if("data" in result){
-            console.log(result.data)
+            SaveUserData(result.data)
         }
     }
 

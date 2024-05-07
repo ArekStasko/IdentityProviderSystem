@@ -8,3 +8,9 @@ export type UserData = {
 export const SaveReturnSite = (returnSite: string) => {
     Cookies.set('returnSite', returnSite);
 }
+
+export const GetReturnSite = () => {
+    const site = Cookies.get('returnSite')
+    if(!site) return undefined;
+    return atob(site);
+}

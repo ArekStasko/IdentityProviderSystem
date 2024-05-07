@@ -7,8 +7,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import Validators from "../../common/validators/Validators";
 import routingConstants from "../../app/routing/routingConstants";
 import {RegisterRequest, useRegisterMutation} from "../../common/slices/register";
-import {SaveUserData} from "../../common/cookies/cookieService";
-
+import {GetReturnSite} from "../../common/cookies/cookieService";
 
 export const Register = () => {
     const navigate = useNavigate();
@@ -26,7 +25,9 @@ export const Register = () => {
         } as RegisterRequest
         const result = await register(registerRequest)
         if("data" in result){
-            SaveUserData(result.data)
+            const returnSite = GetReturnSite();
+            if(!returnSite) return;
+            window.location.href = returnSite;
         }
     }
 

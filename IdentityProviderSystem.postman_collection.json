@@ -14,6 +14,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"MyTestUser\",\r\n    \"password\": \"Password.1234!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{BaseURL}}user/login",
 							"host": [
@@ -33,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Username\": \"MyTestUser\",\r\n    \"Password\": \"Password.1234!\"\r\n}",
+							"raw": "{\r\n    \"username\": \"MyTestUser\",\r\n    \"password\": \"Password.1234!\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -51,24 +60,52 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "Token",
+			"item": [
 				{
-					"name": "Get User Status",
+					"name": "Check Token Expiration",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BaseURL}}user/get-status?Id=1",
+							"raw": "{{BaseURL}}token/checkTokenExp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0IiwibmJmIjoxNzEzNjUxNDY5LCJleHAiOjE3MTM2NTIwNjksImlhdCI6MTcxMzY1MTQ2OX0.pA57v3x4Soc-btmU7EsixucaayZcbQNUvp7TKoqTYFI",
 							"host": [
-								"{{BaseURL}}user"
+								"{{BaseURL}}token"
 							],
 							"path": [
-								"get-status"
+								"checkTokenExp"
 							],
 							"query": [
 								{
-									"key": "Id",
-									"value": "1"
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0IiwibmJmIjoxNzEzNjUxNDY5LCJleHAiOjE3MTM2NTIwNjksImlhdCI6MTcxMzY1MTQ2OX0.pA57v3x4Soc-btmU7EsixucaayZcbQNUvp7TKoqTYFI"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseURL}}token/refreshToken?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwibmJmIjoxNzEzNjUyNTgxLCJleHAiOjE3MTM2NTMxODEsImlhdCI6MTcxMzY1MjU4MX0.wXkJgoz4p3XoalYQhLBTSOLxBiJ59Ll2xLPjV-I62TU",
+							"host": [
+								"{{BaseURL}}token"
+							],
+							"path": [
+								"refreshToken"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwibmJmIjoxNzEzNjUyNTgxLCJleHAiOjE3MTM2NTMxODEsImlhdCI6MTcxMzY1MjU4MX0.wXkJgoz4p3XoalYQhLBTSOLxBiJ59Ll2xLPjV-I62TU"
 								}
 							]
 						}

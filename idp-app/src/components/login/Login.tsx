@@ -7,7 +7,7 @@ import styles from "../../common/styles/styles";
 import {LoginRequest, useLoginMutation} from "../../common/slices/login";
 import {useNavigate} from "react-router";
 import routingConstants from "../../app/routing/routingConstants";
-import {GetReturnSite} from "../../common/cookies/cookieService";
+import {returnToBaseSite} from "../../common/routingService/routingService";
 
 
 export const Login = () => {
@@ -25,9 +25,7 @@ export const Login = () => {
         } as LoginRequest
         const result = await login(loginRequest)
         if("data" in result){
-            const returnSite = GetReturnSite();
-            if(!returnSite) return;
-            window.location.href = returnSite;
+            returnToBaseSite(result.data.id.toString(), result.data.value)
         }
     }
 

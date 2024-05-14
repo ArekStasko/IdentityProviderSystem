@@ -1,5 +1,5 @@
 const RoutingPaths = {
-    root: '/idp/:returnSite',
+    root: '/idp/:returnSite?',
     login: '/idp-login',
     register: '/idp-register',
 };

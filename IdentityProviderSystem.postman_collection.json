@@ -92,7 +92,7 @@
 				{
 					"name": "Refresh Token",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"url": {
 							"raw": "{{BaseURL}}token/refreshToken?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwibmJmIjoxNzEzNjUyNTgxLCJleHAiOjE3MTM2NTMxODEsImlhdCI6MTcxMzY1MjU4MX0.wXkJgoz4p3XoalYQhLBTSOLxBiJ59Ll2xLPjV-I62TU",

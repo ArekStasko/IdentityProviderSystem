@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityProviderSystem.Pers
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityProviderSystem.JobScheduler", "IdentityProviderSystem.JobScheduler\IdentityProviderSystem.JobScheduler.csproj", "{ADBA7243-4EB6-4549-94F5-6770930A416C}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "IdentityProviderSystem.Client", "IdentityProviderSystem.Client\IdentityProviderSystem.Client.shproj", "{E42A6AE5-09C6-49FE-80A2-4F0196AA871E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -9,6 +9,8 @@
     <Import_RootNamespace>IdentityProviderSystem.Client</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Class1.cs"/>
+    <Compile Include="$(MSBuildThisFileDirectory)IdentityProviderSystemClientExtentions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ITokenService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\TokenService.cs" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,11 @@
-﻿namespace IdentityProviderSystem.Client.Services;
+﻿using System.Threading.Tasks;
 
-public interface ITokenService
+namespace IdentityProviderSystem.Client.Services
 {
-    Task<bool> ValidateToken(string token);
+
+    public interface ITokenService
+    {
+        Task<bool> ValidateToken(string token);
+    }
+
 }

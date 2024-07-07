@@ -1,10 +1,24 @@
-﻿namespace IdentityProviderSystem.Client.Services;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 
-public class TokenService : ITokenService
+namespace IdentityProviderSystem.Client.Services
 {
-    public async Task<bool> ValidateToken(string token)
+
+    public class TokenService : ITokenService
     {
-        
+
+        private HttpClient _httpClient;
+
+        public TokenService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+        public async Task<bool> ValidateToken(string token)
+        {
+            throw new System.NotImplementedException();
+        }
+
     }
 
 }

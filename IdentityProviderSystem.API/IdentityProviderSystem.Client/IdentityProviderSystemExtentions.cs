@@ -12,7 +12,7 @@ namespace IdentityProviderSystem.Client
         {
             serviceCollection.AddHttpClient<ITokenService, TokenService>((services, client) =>
             {
-                string baseUrl = "";
+                string baseUrl = "http://192.168.1.42:8080/api/idp-v1/";
                 client.BaseAddress = new Uri(baseUrl);
             });
 

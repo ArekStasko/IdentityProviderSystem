@@ -1,5 +1,7 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace IdentityProviderSystem.Client.Services
 {
@@ -16,7 +18,18 @@ namespace IdentityProviderSystem.Client.Services
 
         public async Task<bool> ValidateToken(string token)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                string uri = $"/checkTokenExp?token={token}";
+                HttpResponseMessage response = await _httpClient.GetAsync(uri);
+                response.EnsureSuccessStatusCode();
+                string body = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(body);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
     }

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using IdentityProviderSystem.Client.DTO;
 using Newtonsoft.Json;
 
 namespace IdentityProviderSystem.Client.Services
@@ -16,19 +19,33 @@ namespace IdentityProviderSystem.Client.Services
             _httpClient = httpClient;
         }
 
-        public async Task<bool> ValidateToken(string token)
+        public async Task<TokenDto> ValidateToken(string token)
         {
             try
             {
+                var tokenDto = new TokenDto() { IsTokenValid = false };
                 string uri = $"/checkTokenExp?token={token}";
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
                 HttpResponseMessage response = await _httpClient.GetAsync(uri);
                 response.EnsureSuccessStatusCode();
                 string body = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<bool>(body);
+                var userIdClaim = jsonToken.Claims.FirstOrDefault(c => c.Type == "userId");
+                if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
+                {
+                    return tokenDto;
+                }
+
+                var userId = int.Parse(userIdClaim.Value);
+                var isTokenValid = JsonConvert.DeserializeObject<bool>(body);
+                tokenDto.IsTokenValid = isTokenValid;
+                tokenDto.UserId = userId;
+
+                return tokenDto;
             }
             catch (Exception e)
             {
-                return false;
+                return new TokenDto() { IsTokenValid = false };
             }
         }
 

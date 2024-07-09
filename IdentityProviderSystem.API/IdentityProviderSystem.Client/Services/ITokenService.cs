@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
+using IdentityProviderSystem.Client.DTO;
 
 namespace IdentityProviderSystem.Client.Services
 {
 
     public interface ITokenService
     {
-        Task<bool> ValidateToken(string token);
+        Task<TokenDto> ValidateToken(string token);
     }
 
 }

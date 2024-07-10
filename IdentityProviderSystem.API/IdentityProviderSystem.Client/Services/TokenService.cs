@@ -24,7 +24,7 @@ namespace IdentityProviderSystem.Client.Services
             try
             {
                 var tokenDto = new TokenDto() { IsTokenValid = false };
-                string uri = $"/checkTokenExp?token={token}";
+                string uri = $"/api/idp-v1/token/checkTokenExp?token={token}";
                 var handler = new JwtSecurityTokenHandler();
                 var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
                 HttpResponseMessage response = await _httpClient.GetAsync(uri);

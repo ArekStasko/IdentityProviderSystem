@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityProviderSystem.JobS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityProviderSystem.Client", "IdentityProviderSystem.Client\IdentityProviderSystem.Client.csproj", "{E092DCD6-2206-45F2-AA29-FAB04B44A004}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityProviderSystem.Client", "IdentityProviderSystem.Client\IdentityProviderSystem.Client.csproj", "{A75F90CA-1FED-4E91-AC86-DDCA67DD98CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{E092DCD6-2206-45F2-AA29-FAB04B44A004}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E092DCD6-2206-45F2-AA29-FAB04B44A004}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E092DCD6-2206-45F2-AA29-FAB04B44A004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A75F90CA-1FED-4E91-AC86-DDCA67DD98CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A75F90CA-1FED-4E91-AC86-DDCA67DD98CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A75F90CA-1FED-4E91-AC86-DDCA67DD98CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A75F90CA-1FED-4E91-AC86-DDCA67DD98CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

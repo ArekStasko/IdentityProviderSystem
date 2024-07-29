@@ -13,7 +13,7 @@ services:
         build: ./IdentityProviderSystem.API
         container_name: identityprovidersystem-api
         environment:
-            DatabaseServer: "mssql-server"
+            DatabaseServer: "192.168.1.40"
             DatabasePort: "1433"
             DatabaseUser: "sa"
             DatabasePassword: "Password.1234"

@@ -2,10 +2,13 @@
   "name": "arekstasko@idp-client",
   "private": false,
   "version": "1.0.0",
+  "main": "dist/IdpClient.tsx",
+  "types": "dist/IdpClient.d.ts",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

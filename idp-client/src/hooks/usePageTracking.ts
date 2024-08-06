@@ -13,7 +13,6 @@ const usePageTracking = () => {
     const authBaseRoute = useSelector((state: RootState) => state.auth.authBaseRoute);
 
     useEffect(() => {
-        console.log(isAuth)
         if (location.pathname === authBaseRoute || isLoading) return;
         if(!isAuth) {
             navigate(authBaseRoute);

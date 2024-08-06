@@ -4,6 +4,8 @@ import {Provider} from "react-redux";
 import {configureStore} from "@reduxjs/toolkit";
 import idpApi from "./api/idpApi.ts";
 import authReducer, {AuthSliceState, setAuthBaseRoute} from "./slices/authSlice.ts";
+import useTokenTracking from "./hooks/useTokenTracking.ts";
+import usePageTracking from "./hooks/usePageTracking.ts";
 
 export interface RootState {
     auth: AuthSliceState
@@ -27,7 +29,8 @@ const IdpClient = ({children, clientStore, authBaseRoute}: IdpClientProps) => {
             getDefaultMiddleware().concat(idpApi.middleware, clientStore.middleware),
     });
     store.dispatch(setAuthBaseRoute(authBaseRoute));
-
+    useTokenTracking()
+    usePageTracking()
     return(
         <Provider store={store}>
             {children}

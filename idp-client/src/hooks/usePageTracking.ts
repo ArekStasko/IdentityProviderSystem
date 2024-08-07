@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useRefreshTokenMutation } from '../RTK/refreshToken/refreshToken';
 import { useSelector } from "react-redux";
-import {RootState} from "../IdpClient.tsx";
-import {GetToken} from "../services/cookieService.ts";
+import {RootState} from "../IdpClient";
+import {GetToken} from "../services/cookieService";
 
 const usePageTracking = () => {
     const location = useLocation();

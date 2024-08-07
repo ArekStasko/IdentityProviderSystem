@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router';
 import {useEffect, useState} from "react";
-import {useCheckTokenQuery} from "../RTK/checkTokenExpiration/checkTokenExpiration.ts";
+import {useCheckTokenQuery} from "../RTK/checkTokenExpiration/checkTokenExpiration";
 import {useDispatch, useSelector} from "react-redux";
-import {GetToken} from "../services/cookieService.ts";
-import {RootState} from "../IdpClient.tsx";
-import {logout} from "../slices/authSlice.ts";
+import {GetToken} from "../services/cookieService";
+import {RootState} from "../IdpClient";
+import {logout} from "../slices/authSlice";
 
 const useTokenTracking = () => {
     const navigate = useNavigate();

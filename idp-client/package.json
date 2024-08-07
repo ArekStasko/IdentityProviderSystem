@@ -1,14 +1,18 @@
 {
-  "name": "arekstasko@idp-client",
+  "name": "idp-client",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/IdpClient.tsx",
   "types": "dist/IdpClient.d.ts",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc",
+    "prepare": "npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -30,5 +34,7 @@
     "tsup": "^8.2.4",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
-  }
+  },
+  "author": "arekstasko",
+  "license": "MIT"
 }

@@ -7,7 +7,7 @@ const idpApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://192.168.1.40:8081/api/idp-v1'
     }),
-    endpoints: (build) => ({})
+    endpoints: () => ({})
 });
 
 export default idpApi;

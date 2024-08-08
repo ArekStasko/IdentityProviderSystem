@@ -1,5 +1,5 @@
-import {GetToken} from "../../services/cookieService.ts";
-import idpApi from "../../api/idpApi.ts";
+import {GetToken} from "../../services/cookieService";
+import idpApi from "../../api/idpApi";
 
 export const refreshTokenApi = idpApi.injectEndpoints({
     endpoints: (build) => ({

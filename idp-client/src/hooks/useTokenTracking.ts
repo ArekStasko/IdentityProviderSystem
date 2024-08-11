@@ -21,7 +21,7 @@ const useTokenTracking = () => {
         if (!token) navigate(authBaseRoute);
         setToken(token);
         if(isAuth){
-            interval = setInterval(() => {
+            interval = window.setInterval(() => {
                 refetch();
             }, 30000);
         }

@@ -19,3 +19,6 @@ In my IdP service i use JWT to check user session and UserId ( user retrieve use
 
 ### How to use IdP for my projects ?
 You can start IdP system via docker-compose command and by installing IdentityProviderSystem.Client package on your backend service, i will provide more details near in the feature due to development of this app.
+
+## How to setup Idp-Client ?
+-- in progress

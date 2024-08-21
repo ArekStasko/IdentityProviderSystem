@@ -13,17 +13,20 @@ const useTokenTracking = () => {
     const dispatch = useDispatch();
     const isAuth = useSelector((state: RootState) => state.auth.isAuthenticated);
     const authBaseRoute = useSelector((state: RootState) => state.auth.authBaseRoute);
+    const dasboardRoute = useSelector((state: RootState) => state.auth.dasboardRoute);
 
     useEffect(() => {
         let interval: number | undefined;
 
         const token = GetToken();
-        if (!token) navigate(authBaseRoute);
+        //if (!token) navigate(authBaseRoute);
         setToken(token);
         if(isAuth){
+            console.log("WORK")
             interval = window.setInterval(() => {
                 refetch();
             }, 30000);
+            navigate(dasboardRoute);
         }
         if(!isAuth){
             clearInterval(interval);

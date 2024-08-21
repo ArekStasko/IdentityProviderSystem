@@ -3,7 +3,7 @@ import React from "react";
 import {Provider} from "react-redux";
 import {configureStore, Middleware} from "@reduxjs/toolkit";
 import idpApi from "./api/idpApi";
-import authReducer, {AuthSliceState, setAuthBaseRoute} from "./slices/authSlice";
+import authReducer, {AuthSliceState, setAuthBaseRoute, setDashboardRoute} from "./slices/authSlice";
 import TrackingService from "./services/trackingService";
 
 export interface RootState {
@@ -14,9 +14,10 @@ interface IdpClientProps {
     children: React.ReactNode;
     clientApi: any;
     authBaseRoute: string;
+    dashboardRoute: string;
 }
 
-const IdpClient = ({children, clientApi, authBaseRoute}: IdpClientProps) => {
+const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute}: IdpClientProps) => {
 
     const store = configureStore({
         reducer: {
@@ -28,6 +29,7 @@ const IdpClient = ({children, clientApi, authBaseRoute}: IdpClientProps) => {
             getDefaultMiddleware().concat(idpApi.middleware, clientApi.middleware),
     });
     store.dispatch(setAuthBaseRoute(authBaseRoute));
+    store.dispatch(setDashboardRoute(dashboardRoute));
 
     return(
         <Provider store={store}>

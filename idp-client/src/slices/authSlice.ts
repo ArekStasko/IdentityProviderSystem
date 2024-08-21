@@ -4,6 +4,7 @@ import {DeleteToken, SaveToken} from "../services/cookieService";
 export type AuthSliceState = {
     isAuthenticated: boolean;
     authBaseRoute: string;
+    dasboardRoute: string;
 };
 const initialState = {isAuthenticated: false, authBaseRoute: ""} as AuthSliceState;
 
@@ -12,6 +13,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login(state, action) {
+            console.log(action.payload);
             SaveToken(action.payload.token);
             state.isAuthenticated = true;
         },
@@ -22,9 +24,12 @@ const authSlice = createSlice({
         },
         setAuthBaseRoute(state, action: PayloadAction<string>) {
             state.authBaseRoute = action.payload;
+        },
+        setDashboardRoute(state, action: PayloadAction<string>) {
+            state.dasboardRoute = action.payload;
         }
     }
 })
 
-export const {login, logout, setAuthBaseRoute} = authSlice.actions;
+export const {login, logout, setAuthBaseRoute, setDashboardRoute} = authSlice.actions;
 export default authSlice.reducer

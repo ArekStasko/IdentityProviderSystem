@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {Provider} from "react-redux";
-import {configureStore} from "@reduxjs/toolkit";
-import idpApi from "./api/idpApi.ts";
-import authReducer, {AuthSliceState, setAuthBaseRoute} from "./slices/authSlice.ts";
+import {configureStore, Middleware} from "@reduxjs/toolkit";
+import idpApi from "./api/idpApi";
+import authReducer, {AuthSliceState, setAuthBaseRoute, setDashboardRoute} from "./slices/authSlice";
+import TrackingService from "./services/trackingService";
 
 export interface RootState {
     auth: AuthSliceState
@@ -11,26 +12,30 @@ export interface RootState {
 
 interface IdpClientProps {
     children: React.ReactNode;
-    clientStore: any;
+    clientApi: any;
     authBaseRoute: string;
+    dashboardRoute: string;
 }
 
-const IdpClient = ({children, clientStore, authBaseRoute}: IdpClientProps) => {
+const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute}: IdpClientProps) => {
 
     const store = configureStore({
         reducer: {
-            ...clientStore.reducer,
+            [clientApi.reducerPath]: clientApi.reducer,
             [idpApi.reducerPath]: idpApi.reducer,
             auth: authReducer
         },
         middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(idpApi.middleware, clientStore.middleware),
+            getDefaultMiddleware().concat(idpApi.middleware, clientApi.middleware),
     });
     store.dispatch(setAuthBaseRoute(authBaseRoute));
+    store.dispatch(setDashboardRoute(dashboardRoute));
 
     return(
         <Provider store={store}>
-            {children}
+            <TrackingService>
+                {children}
+            </TrackingService>
         </Provider>
     )
 }

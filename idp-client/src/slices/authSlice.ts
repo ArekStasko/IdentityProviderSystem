@@ -1,9 +1,10 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {DeleteToken, SaveToken} from "../services/cookieService.ts";
+import {DeleteToken, SaveToken} from "../services/cookieService";
 
 export type AuthSliceState = {
     isAuthenticated: boolean;
     authBaseRoute: string;
+    dasboardRoute: string;
 };
 const initialState = {isAuthenticated: false, authBaseRoute: ""} as AuthSliceState;
 
@@ -22,9 +23,12 @@ const authSlice = createSlice({
         },
         setAuthBaseRoute(state, action: PayloadAction<string>) {
             state.authBaseRoute = action.payload;
+        },
+        setDashboardRoute(state, action: PayloadAction<string>) {
+            state.dasboardRoute = action.payload;
         }
     }
 })
 
-export const {login, logout, setAuthBaseRoute} = authSlice.actions;
+export const {login, logout, setAuthBaseRoute, setDashboardRoute} = authSlice.actions;
 export default authSlice.reducer

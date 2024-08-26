@@ -1,4 +1,4 @@
-import idpApi from "../../api/idpApi.ts";
+import idpApi from "../../api/idpApi";
 
 export const checkTokenExpirationApi = idpApi.injectEndpoints({
     endpoints: (build) => ({

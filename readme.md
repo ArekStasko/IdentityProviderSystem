@@ -18,7 +18,56 @@ I use BCrypt to create hash from user passwords with random salt which prevents 
 In my IdP service i use JWT to check user session and UserId ( user retrieve userId via IdentityProviderSystem.Client package ), data about session is stored in database and users don't have direct access to it due to security features.
 
 ### How to use IdP for my projects ?
-You can start IdP system via docker-compose command and by installing IdentityProviderSystem.Client package on your backend service, i will provide more details near in the feature due to development of this app.
+You can start IdP system via docker-compose command and by installing IdentityProviderSystem.Client package on your backend service
 
 ## How to setup Idp-Client ?
--- in progress
+There are two versions of Idp-Client
+
+Idp-Client provided via Nuget package which you can add to your project via :
+
+
+>dotnet add package IdpClient
+
+
+Now in your program.cs you should add Authorization middleware from IdentityProviderSystem:
+
+
+```
+using IdentityProviderSystem.Client;
+using IdentityProviderSystem.Client.Middleware;
+
+app.UseMiddleware<Authorization>();
+```
+
+Now your application will automatically check if user has valid token
+remember to put the auth token in requests header
+In future versions i will provide correct Idp URLs configuration
+
+There is also Idp-Client provided via NPM to serve user authorization on your
+Frontend App, to install it just run :
+
+> npm i identity-provider-client
+
+After successfull installation you are able configure your react + redux frontend app
+In your index.tsx add IdpClient provider by importing :
+
+> import IdpClient from 'identity-provider-client'
+
+Next you should wrap your application with IdpClient for example :
+
+```
+<BrowserRouter>
+ <IdpClient
+   clientApi={plantcareApi}
+   authBaseRoute={RoutingConstants.authBasic}
+   dashboardRoute={RoutingConstants.root}>
+        <App />
+  </IdpClient>
+</BrowserRouter>
+```
+
+ClientApi are your RTKs IdpClient will automatically add them to Redux Context,
+authBaseRoute is page on your application on which user land if not authenticated
+and dashboardRoute is a page on which user should land after authentication
+
+Idp-Client will take care of monitoring user token life and refreshing if token will expire, user will be automatically redirected to authBaseRoute, also if not authenticated and will try to go on dashboard or any other side which requires authentication, he will be blocked and redirected back to authBaseRoute

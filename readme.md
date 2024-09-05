@@ -18,4 +18,4 @@ I use BCrypt to create hash from user passwords with random salt which prevents 
 In my IdP service i use JWT to check user session and UserId ( user retrieve userId via IdentityProviderSystem.Client package ), data about session is stored in database and users don't have direct access to it due to security features.
 
 ### How to use IdP for my projects ?
-You can start IdP system via docker-compose command and by installing IdentityProviderSystem.Client package on your backend service, i will provide more details near in the feature due to development of this app.
+You can start IdP system via docker-compose command and by installing IdentityProviderSystem.Client package on your backend service

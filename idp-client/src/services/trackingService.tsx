@@ -1,10 +1,9 @@
 import useTokenTracking from "../hooks/useTokenTracking";
 import usePageTracking from "../hooks/usePageTracking";
-import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {useLocation, useNavigate, useParams } from "react-router";
-import {login} from "../slices/authSlice";
-import {RootState} from "../IdpClient";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router";
+import { login } from "../slices/authSlice";
 
 interface TrackingServiceProps {
     children: React.ReactNode;
@@ -18,6 +17,7 @@ const TrackingService = ({children}: TrackingServiceProps) => {
     useEffect(() => {
         const parts = location.pathname.split('/');
         const token = parts.length === 4 ? parts[3] : null;
+        console.log("TRACKING SERVICE USE EFFECT")
         if(token) {
             dispatch(login({token: token}))
         }

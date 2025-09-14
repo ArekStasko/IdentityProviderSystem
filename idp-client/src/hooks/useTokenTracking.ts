@@ -15,9 +15,11 @@ const useTokenTracking = () => {
     const isAuth = useSelector((state: RootState) => state.auth.isAuthenticated);
     const authBaseRoute = useSelector((state: RootState) => state.auth.authBaseRoute);
     const dasboardRoute = useSelector((state: RootState) => state.auth.dasboardRoute);
-
+    console.log("TOKEN")
+    console.log(token)
+    console.log(GetToken())
+    console.log("---")
     useEffect(() => {
-
         const token = GetToken();
         setToken(token);
         if(isAuth){

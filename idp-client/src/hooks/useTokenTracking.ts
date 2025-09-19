@@ -24,6 +24,10 @@ const useTokenTracking = () => {
         setToken(token);
         if(isAuth){
             const intervalToSet = window.setInterval(() => {
+                console.log("INTERVAL")
+                console.log(token)
+                console.log(GetToken())
+                console.log("---")
                 refetch();
             }, 30000);
             setInterval(intervalToSet);

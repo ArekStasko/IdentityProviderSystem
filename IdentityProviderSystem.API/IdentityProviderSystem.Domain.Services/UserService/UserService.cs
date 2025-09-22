@@ -15,15 +15,13 @@ public class UserService : IUserService
     private readonly IUserRepository _repository;
     private readonly ISaltService _saltService;
     private readonly ITokenService _tokenService;
-    private readonly IMapper _mapper;
     private readonly ILogger<IUserService> _logger;
     
-    public UserService(IUserRepository repository, ISaltService saltService, ITokenService tokenService, IMapper mapper, ILogger<IUserService> logger)
+    public UserService(IUserRepository repository, ISaltService saltService, ITokenService tokenService, ILogger<IUserService> logger)
     {
         _repository = repository;
         _saltService = saltService;
         _tokenService = tokenService;
-        _mapper = mapper;
         _logger = logger;
     }
     

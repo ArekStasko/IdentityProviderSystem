@@ -25,25 +25,25 @@ public class TokenService : ITokenService
         _logger = logger;
     }
     
-    public async Task<Result<IToken>> Get(int userId)
+    public async Task<Result<IAccessToken>> Get(int userId)
     {
         try
         {
             var result = await _repository.Get(userId);
-            return result.Match(token => new Result<IToken>(token), e =>
+            return result.Match(token => new Result<IAccessToken>(token), e =>
             {
                 _logger.LogError("Get token failed with an exception: {e}", e);
-                return new Result<IToken>(e);
+                return new Result<IAccessToken>(e);
             });
         }
         catch (Exception e)
         {
             _logger.LogError("Get Token by user id failed with an exception: {e}", e);
-            return new Result<IToken>(e);
+            return new Result<IAccessToken>(e);
         }
     }
 
-    public async Task<Result<IToken>> Generate(int userId)
+    public async Task<Result<IAccessToken>> Generate(int userId)
     {
         try
         {
@@ -54,7 +54,7 @@ public class TokenService : ITokenService
                 throw e;
             });
             var existingToken = existingTokens.FirstOrDefault(t => t.UserId == userId);
-            if (existingToken != null) return new Result<IToken>(existingToken);
+            if (existingToken != null) return new Result<IAccessToken>(existingToken);
                 
             DateTime value = DateTime.UtcNow.AddMinutes(10.0);
             var result = await _saltService.GenerateSalt();
@@ -80,7 +80,7 @@ public class TokenService : ITokenService
             SecurityToken tokenToWrite = jwtSecurityTokenHandler.CreateToken(tokenDescriptor);
             var tokenValue = jwtSecurityTokenHandler.WriteToken(tokenToWrite);
 
-            IToken token = new Token()
+            IAccessToken token = new AccessToken()
             {
                 UserId = userId,
                 Secret = secret,
@@ -89,16 +89,16 @@ public class TokenService : ITokenService
             };
 
             var saveResult = await _repository.Create(token);
-            return saveResult.Match(succ => new Result<IToken>(succ), e =>
+            return saveResult.Match(succ => new Result<IAccessToken>(succ), e =>
             {
                 _logger.LogError("Something went wrong while saving token to db: {e}", e);
-                return new Result<IToken>(e);
+                return new Result<IAccessToken>(e);
             });
         }
         catch (Exception e)
         {
             _logger.LogError("Generate Token failed with an exception: {e}", e);
-            return new Result<IToken>(e);
+            return new Result<IAccessToken>(e);
         }
     }
 

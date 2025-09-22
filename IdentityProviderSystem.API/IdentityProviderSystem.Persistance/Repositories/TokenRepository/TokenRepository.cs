@@ -39,22 +39,22 @@ public class TokenRepository : ITokenRepository
         }
     }
 
-    public async Task<Result<IToken>> Create(IToken token)
+    public async Task<Result<IAccessToken>> Create(IAccessToken token)
     {
         try
         {
-           var result = await _cotnext.Tokens.AddAsync((Token)token);
+           var result = await _cotnext.Tokens.AddAsync((AccessToken)token);
            await _cotnext.SaveChangesAsync();
-           return new Result<IToken>(result.Entity);
+           return new Result<IAccessToken>(result.Entity);
         }
         catch (Exception e)
         {
             _logger.LogError("Create token repository method failed with an exception: {e}", e);
-            return new Result<IToken>(e);
+            return new Result<IAccessToken>(e);
         }
     }
 
-    public async Task<Result<IToken>> Update(IToken token)
+    public async Task<Result<IAccessToken>> Update(IAccessToken token)
     {
         try
         {
@@ -62,20 +62,20 @@ public class TokenRepository : ITokenRepository
             if (tokenToUpdate == null)
             {
                 _logger.LogError("There is no token with {id} Id", token.Id);
-                return new Result<IToken>(new NullReferenceException());
+                return new Result<IAccessToken>(new NullReferenceException());
             }
 
             await _cotnext.SaveChangesAsync();
-            return new Result<IToken>(tokenToUpdate);
+            return new Result<IAccessToken>(tokenToUpdate);
         }
         catch (Exception e)
         {
             _logger.LogError("Update token repository method failed with an exception: {e}", e);
-            return new Result<IToken>(e);
+            return new Result<IAccessToken>(e);
         }
     }
 
-    public async Task<Result<IToken>> Get(int userId)
+    public async Task<Result<IAccessToken>> Get(int userId)
     { 
         try
         {
@@ -83,28 +83,28 @@ public class TokenRepository : ITokenRepository
             if (token == null)
             {
                 _logger.LogError("User with {id} Id doesnt have any valid tokens");
-                return new Result<IToken>(new NullReferenceException());
+                return new Result<IAccessToken>(new NullReferenceException());
             }
-            return new Result<IToken>(token);
+            return new Result<IAccessToken>(token);
         }
         catch (Exception e)
         {
             _logger.LogError("Get token repository method failed with an exception: {e}", e);
-            return new Result<IToken>(e);
+            return new Result<IAccessToken>(e);
         }
     }
     
-    public async Task<Result<IList<IToken>>> Get()
+    public async Task<Result<IList<IAccessToken>>> Get()
     { 
         try
         {
-            var tokens = await _cotnext.Tokens.ToListAsync<IToken>();
-            return new Result<IList<IToken>>(tokens);
+            var tokens = await _cotnext.Tokens.ToListAsync<IAccessToken>();
+            return new Result<IList<IAccessToken>>(tokens);
         }
         catch (Exception e)
         {
             _logger.LogError("Get token repository method failed with an exception: {e}", e);
-            return new Result<IList<IToken>>(e);
+            return new Result<IList<IAccessToken>>(e);
         }
     }
 }

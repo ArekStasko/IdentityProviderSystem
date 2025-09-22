@@ -22,13 +22,13 @@ public class TokenJob : IInvocable
         try
         {
             var result = await _repository.Get();
-            var tokens = result.Match<IList<IToken>>(tokens => tokens, e =>
+            var tokens = result.Match<IList<IAccessToken>>(tokens => tokens, e =>
             {
                 _logger.LogError("Error occured while fetching tokens in Token Job", e);
                 throw e;
             });
             
-            foreach (IToken token in tokens)
+            foreach (IAccessToken token in tokens)
             {
                 if (token.Alive)
                 {

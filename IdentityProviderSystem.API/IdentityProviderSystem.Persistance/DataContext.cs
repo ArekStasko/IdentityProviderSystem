@@ -14,5 +14,5 @@ public class DataContext : DbContext, IUserDataContext, ISaltDataContext, IToken
 
     public virtual DbSet<Salt> Salts { get; set; }
     public virtual DbSet<User> Users { get; set; }
-    public DbSet<Token> Tokens { get; set; }
+    public DbSet<AccessToken> Tokens { get; set; }
 }

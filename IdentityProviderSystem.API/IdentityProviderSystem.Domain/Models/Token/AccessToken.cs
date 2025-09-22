@@ -1,6 +1,6 @@
 ﻿namespace IdentityProviderSystem.Domain.Models.Token;
 
-public class Token : IToken, ITokenResponse
+public class AccessToken : IAccessToken, ITokenResponse
 {
     public int Id { get; set; }
     public int UserId { get; set; }

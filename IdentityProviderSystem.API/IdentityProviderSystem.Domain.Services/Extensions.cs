@@ -10,7 +10,7 @@ public static class Extensions
     public static void AddDomainServices(this IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService.UserService>();
-        services.AddScoped<ITokenService, TokenService.TokenService>();
+        services.AddScoped<IAccessTokenService, AccessTokenService>();
         services.AddScoped<ISaltService, SaltService.SaltService>();
     }
 

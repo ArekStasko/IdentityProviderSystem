@@ -1,61 +1,31 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Castle.Core.Logging;
 using IdentityProviderSystem.Domain.Models.Token;
 using IdentityProviderSystem.Domain.Services.SaltService;
 using IdentityProviderSystem.Persistance.Repositories.TokenRepository;
-using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityProviderSystem.Domain.Services.TokenService;
 
-public class TokenService : ITokenService
+public class AccessTokenService : IAccessTokenService
 {
     private readonly ITokenRepository _repository;
     private readonly ISaltService _saltService;
-    private readonly ILogger<ITokenService> _logger;
+    private readonly ILogger<IAccessTokenService> _logger;
 
-    public TokenService(ITokenRepository repository, ISaltService saltService, ILogger<ITokenService> logger)
+    public AccessTokenService(ITokenRepository repository, ISaltService saltService, ILogger<IAccessTokenService> logger)
     {
         _repository = repository;
         _saltService = saltService;
         _logger = logger;
     }
-    
-    public async Task<Result<IAccessToken>> Get(int userId)
-    {
-        try
-        {
-            var result = await _repository.Get(userId);
-            return result.Match(token => new Result<IAccessToken>(token), e =>
-            {
-                _logger.LogError("Get token failed with an exception: {e}", e);
-                return new Result<IAccessToken>(e);
-            });
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("Get Token by user id failed with an exception: {e}", e);
-            return new Result<IAccessToken>(e);
-        }
-    }
-
     public async Task<Result<IAccessToken>> Generate(int userId)
     {
         try
         {
-            var existingTokensResult = await _repository.Get();
-            var existingTokens = existingTokensResult.Match(tokens => tokens, e =>
-            {
-                _logger.LogError("Generate Token service failed while getting tokens: {e}", e );
-                throw e;
-            });
-            var existingToken = existingTokens.FirstOrDefault(t => t.UserId == userId);
-            if (existingToken != null) return new Result<IAccessToken>(existingToken);
-                
             DateTime value = DateTime.UtcNow.AddMinutes(10.0);
             var result = await _saltService.GenerateSalt();
 

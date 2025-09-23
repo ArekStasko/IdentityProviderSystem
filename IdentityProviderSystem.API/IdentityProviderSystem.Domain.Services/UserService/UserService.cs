@@ -14,14 +14,14 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _repository;
     private readonly ISaltService _saltService;
-    private readonly ITokenService _tokenService;
+    private readonly IAccessTokenService _accessTokenService;
     private readonly ILogger<IUserService> _logger;
     
-    public UserService(IUserRepository repository, ISaltService saltService, ITokenService tokenService, ILogger<IUserService> logger)
+    public UserService(IUserRepository repository, ISaltService saltService, IAccessTokenService accessTokenService, ILogger<IUserService> logger)
     {
         _repository = repository;
         _saltService = saltService;
-        _tokenService = tokenService;
+        _accessTokenService = accessTokenService;
         _logger = logger;
     }
     
@@ -50,7 +50,7 @@ public class UserService : IUserService
                 throw e;
             });
 
-            var token = await _tokenService.Generate(userId);
+            var token = await _accessTokenService.Generate(userId);
             return token.Match(succ => new Result<ITokenResponse>((ITokenResponse)succ), err =>
             {
                 _logger.LogError("Token service failed while generating token: {e}", err);
@@ -79,7 +79,7 @@ public class UserService : IUserService
             var verifyLogin = VerifyHash(user.Password, userToLogin.Hash);
             if (verifyLogin)
             {
-                var token = await _tokenService.Generate(userToLogin.Id);
+                var token = await _accessTokenService.Generate(userToLogin.Id);
                 return token.Match(succ => new Result<ITokenResponse>((ITokenResponse)succ), err =>
                 {
                     _logger.LogError("Token service failed while generating token: {e}", err);

@@ -8,13 +8,13 @@ namespace IdentityProviderSystem.Controllers.Token;
 [ApiController]
 public class TokenController : ControllerBase
 {
-    private readonly ITokenService _tokenService;
+    private readonly IAccessTokenService _accessTokenService;
     private readonly IMapper _mapper;
     private readonly ILogger<TokenController> _logger;
     
-    public TokenController(ITokenService tokenService, IMapper mapper,  ILogger<TokenController> logger)
+    public TokenController(IAccessTokenService accessTokenService, IMapper mapper,  ILogger<TokenController> logger)
     {
-        _tokenService = tokenService;
+        _accessTokenService = accessTokenService;
         _mapper = mapper;
         _logger = logger;
     }
@@ -25,7 +25,7 @@ public class TokenController : ControllerBase
     public async ValueTask<IActionResult> RefreshToken(string token)
     {
         _logger.LogInformation("Refresh token endpoint starts processing");
-        var result = await _tokenService.RefreshToken(token);
+        var result = await _accessTokenService.RefreshToken(token);
         return result.ToOk();
     }
     
@@ -35,7 +35,7 @@ public class TokenController : ControllerBase
     public async ValueTask<IActionResult> CheckTokenExp(string token)
     {
         _logger.LogInformation("Check token expiration endpoint starts processing");
-        var result = await _tokenService.CheckExp(token);
+        var result = await _accessTokenService.CheckExp(token);
         return result.ToOk();
     }
 }

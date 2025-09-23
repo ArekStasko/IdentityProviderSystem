@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using IdentityProviderSystem.Domain.Models.Token;
@@ -72,7 +73,7 @@ public class AccessTokenService : IAccessTokenService
         }
     }
 
-    public async Task<Result<bool>> Refresh(IToken refreshToken)
+    public async Task<Result<IAccessToken>> Refresh(string refreshToken)
     {
         try
         {
@@ -84,13 +85,13 @@ public class AccessTokenService : IAccessTokenService
             });
             
             var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(refreshToken.Value) as JwtSecurityToken;
+            var jsonToken = handler.ReadToken(refreshToken) as JwtSecurityToken;
 
             var userIdClaim = jsonToken.Claims.FirstOrDefault(c => c.Type == "userId");
             if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
             {
                 _logger.LogError("Token does not contain userId claim");
-                return new Result<bool>(false);
+                return new Result<IAccessToken>(new AuthenticationException());
             }
 
             var userId = int.Parse(userIdClaim.Value);
@@ -98,21 +99,21 @@ public class AccessTokenService : IAccessTokenService
             if (userToken == null)
             {
                 _logger.LogError("Token for user with Id: {id} expired", userId);
-                return new Result<bool>(false);
+                return new Result<IAccessToken>(new AuthenticationException());
             }
 
             userToken.Alive = true;
             var result = await _repository.Update(userToken);
-            return result.Match(_ => new Result<bool>(true), e =>
+            return result.Match(_ => new Result<IAccessToken>(true), e =>
             {
                 _logger.LogError("Update token alive status failed with exception: {e}", e);
-                return new Result<bool>(false);
+                return new Result<IAccessToken>(new AuthenticationException());
             });
         }
         catch (Exception e)
         {
             _logger.LogError("Update token alive status failed with an exception: {e}", e);
-            return new Result<bool>(e);
+            return new Result<IAccessToken>(e);
         }
     }
 

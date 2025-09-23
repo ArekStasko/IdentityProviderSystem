@@ -22,10 +22,10 @@ public class TokenController : ControllerBase
     [HttpPost(Name = "[controller]/refreshToken")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Exception))]
-    public async ValueTask<IActionResult> RefreshToken(string token)
+    public async ValueTask<IActionResult> RefreshToken(string refreshToken)
     {
         _logger.LogInformation("Refresh token endpoint starts processing");
-        var result = await _accessTokenService.RefreshToken(token);
+        var result = await _accessTokenService.Refresh(refreshToken);
         return result.ToOk();
     }
     

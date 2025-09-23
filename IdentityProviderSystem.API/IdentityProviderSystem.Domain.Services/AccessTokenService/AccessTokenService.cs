@@ -72,7 +72,7 @@ public class AccessTokenService : IAccessTokenService
         }
     }
 
-    public async Task<Result<bool>> RefreshToken(string token)
+    public async Task<Result<bool>> Refresh(IToken refreshToken)
     {
         try
         {
@@ -84,7 +84,7 @@ public class AccessTokenService : IAccessTokenService
             });
             
             var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+            var jsonToken = handler.ReadToken(refreshToken.Value) as JwtSecurityToken;
 
             var userIdClaim = jsonToken.Claims.FirstOrDefault(c => c.Type == "userId");
             if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
@@ -116,7 +116,7 @@ public class AccessTokenService : IAccessTokenService
         }
     }
 
-    public async Task<Result<bool>> CheckExp(string token)
+    public async Task<Result<double>> Validate(string token)
     {
         try
         {
@@ -134,7 +134,7 @@ public class AccessTokenService : IAccessTokenService
             if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
             {
                 _logger.LogError("Token does not contain userId claim");
-                return new Result<bool>(false);
+                return new Result<double>(0);
             }
 
             var userId = int.Parse(userIdClaim.Value);
@@ -142,19 +142,17 @@ public class AccessTokenService : IAccessTokenService
             if (userToken == null)
             {
                 _logger.LogError("Token for user with Id: {id} expired", userId);
-                return new Result<bool>(false);
+                return new Result<double>(0);
             }
             
-            if (userToken.Alive) return new Result<bool>(true);
-            
             JwtSecurityToken tokenToValidate = new JwtSecurityToken(userToken.Value);
-            bool isExpired = tokenToValidate.ValidTo > DateTime.UtcNow;
-            return new Result<bool>(isExpired);
+            double timeToExpire = (tokenToValidate.ValidTo - DateTime.UtcNow).TotalSeconds;
+            return new Result<double>(timeToExpire);
         }
         catch (Exception e)
         {
             _logger.LogError("Check Token Expiration failed with an exception: {e}", e);
-            return new Result<bool>(e);
+            return new Result<double>(e);
         }
     }
 }

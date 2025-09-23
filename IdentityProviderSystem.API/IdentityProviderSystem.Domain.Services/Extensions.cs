@@ -1,4 +1,5 @@
-﻿using IdentityProviderSystem.Domain.Services.SaltService;
+﻿using IdentityProviderSystem.Domain.Services.RefreshTokenService;
+using IdentityProviderSystem.Domain.Services.SaltService;
 using IdentityProviderSystem.Domain.Services.TokenService;
 using IdentityProviderSystem.Domain.Services.UserService;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ public static class Extensions
     {
         services.AddScoped<IUserService, UserService.UserService>();
         services.AddScoped<IAccessTokenService, AccessTokenService>();
+        services.AddScoped<IRefreshTokenService, RefreshTokenService.RefreshTokenService>();
         services.AddScoped<ISaltService, SaltService.SaltService>();
     }
 

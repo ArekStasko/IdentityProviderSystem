@@ -73,50 +73,6 @@ public class AccessTokenService : IAccessTokenService
         }
     }
 
-    public async Task<Result<IAccessToken>> Refresh(string refreshToken)
-    {
-        try
-        {
-            var getTokensResult = await _repository.Get();
-            var tokens = getTokensResult.Match(succ => succ, e =>
-            {
-                _logger.LogError("Get tokens failed with an exception: {e}", e);
-                throw e;
-            });
-            
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(refreshToken) as JwtSecurityToken;
-
-            var userIdClaim = jsonToken.Claims.FirstOrDefault(c => c.Type == "userId");
-            if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
-            {
-                _logger.LogError("Token does not contain userId claim");
-                return new Result<IAccessToken>(new AuthenticationException());
-            }
-
-            var userId = int.Parse(userIdClaim.Value);
-            var userToken = tokens.FirstOrDefault(t => t.UserId == userId);
-            if (userToken == null)
-            {
-                _logger.LogError("Token for user with Id: {id} expired", userId);
-                return new Result<IAccessToken>(new AuthenticationException());
-            }
-
-            userToken.Alive = true;
-            var result = await _repository.Update(userToken);
-            return result.Match(_ => new Result<IAccessToken>(true), e =>
-            {
-                _logger.LogError("Update token alive status failed with exception: {e}", e);
-                return new Result<IAccessToken>(new AuthenticationException());
-            });
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("Update token alive status failed with an exception: {e}", e);
-            return new Result<IAccessToken>(e);
-        }
-    }
-
     public async Task<Result<double>> Validate(string token)
     {
         try

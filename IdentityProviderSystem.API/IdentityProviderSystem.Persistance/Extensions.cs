@@ -30,7 +30,7 @@ public static class Extensions
     {
         serivces.AddScoped<IUserRepository, UserRepository>();
         serivces.AddScoped<ISaltRepository, SaltRepository>();
-        serivces.AddScoped<ITokenRepository, TokenRepository>();
+        serivces.AddScoped<IAccessTokenRepository, AccessTokenRepository>();
     }
     
     private static string GetConnectionString()

@@ -8,10 +8,10 @@ namespace IdentityProviderSystem.JobScheduler.Jobs;
 
 public class TokenJob : IInvocable
 {
-    private readonly ITokenRepository _repository;
+    private readonly IAccessTokenRepository _repository;
     private readonly ILogger<TokenJob> _logger;
 
-    public TokenJob(ITokenRepository repository, ILogger<TokenJob> logger)
+    public TokenJob(IAccessTokenRepository repository, ILogger<TokenJob> logger)
     {
         _repository = repository;
         _logger = logger;

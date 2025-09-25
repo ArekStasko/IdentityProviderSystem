@@ -4,16 +4,16 @@ using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace IdentityProviderSystem.Persistance.Repositories.TokenRepository;
+namespace IdentityProviderSystem.Persistance.Repositories.AccessTokenRepository;
 
-public class TokenRepository : ITokenRepository
+public class AccessTokenRepository : IAccessTokenRepository
 {
-    private readonly ITokenDataContext _cotnext;
-    private readonly ILogger<ITokenRepository> _logger;
+    private readonly ITokenDataContext _context;
+    private readonly ILogger<IAccessTokenRepository> _logger;
     
-    public TokenRepository(ITokenDataContext cotnext, ILogger<ITokenRepository> logger)
+    public AccessTokenRepository(ITokenDataContext context, ILogger<IAccessTokenRepository> logger)
     {
-        _cotnext = cotnext;
+        _context = context;
         _logger = logger;
     }
     
@@ -21,15 +21,15 @@ public class TokenRepository : ITokenRepository
     {
         try
         {
-            var tokenToDelete = await _cotnext.Tokens.FirstOrDefaultAsync(t => t.Id == Id);
+            var tokenToDelete = await _context.Tokens.FirstOrDefaultAsync(t => t.Id == Id);
             if (tokenToDelete == null)
             {
                 _logger.LogError("There is no token with {id} Id", Id);
                 return new Result<bool>(false);
             }
 
-            _cotnext.Tokens.Remove(tokenToDelete);
-            await _cotnext.SaveChangesAsync();
+            _context.Tokens.Remove(tokenToDelete);
+            await _context.SaveChangesAsync();
             return new Result<bool>(true);
         }
         catch (Exception e)
@@ -43,8 +43,8 @@ public class TokenRepository : ITokenRepository
     {
         try
         {
-           var result = await _cotnext.Tokens.AddAsync((AccessToken)token);
-           await _cotnext.SaveChangesAsync();
+           var result = await _context.Tokens.AddAsync((AccessToken)token);
+           await _context.SaveChangesAsync();
            return new Result<IAccessToken>(result.Entity);
         }
         catch (Exception e)
@@ -58,14 +58,14 @@ public class TokenRepository : ITokenRepository
     {
         try
         {
-            var tokenToUpdate = await _cotnext.Tokens.FirstOrDefaultAsync(t => t.Id == token.Id);
+            var tokenToUpdate = await _context.Tokens.FirstOrDefaultAsync(t => t.Id == token.Id);
             if (tokenToUpdate == null)
             {
                 _logger.LogError("There is no token with {id} Id", token.Id);
                 return new Result<IAccessToken>(new NullReferenceException());
             }
 
-            await _cotnext.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return new Result<IAccessToken>(tokenToUpdate);
         }
         catch (Exception e)
@@ -79,7 +79,7 @@ public class TokenRepository : ITokenRepository
     { 
         try
         {
-            var token = await _cotnext.Tokens.FirstOrDefaultAsync(t => t.UserId == userId);
+            var token = await _context.Tokens.FirstOrDefaultAsync(t => t.UserId == userId);
             if (token == null)
             {
                 _logger.LogError("User with {id} Id doesnt have any valid tokens");
@@ -98,7 +98,7 @@ public class TokenRepository : ITokenRepository
     { 
         try
         {
-            var tokens = await _cotnext.Tokens.ToListAsync<IAccessToken>();
+            var tokens = await _context.Tokens.ToListAsync<IAccessToken>();
             return new Result<IList<IAccessToken>>(tokens);
         }
         catch (Exception e)

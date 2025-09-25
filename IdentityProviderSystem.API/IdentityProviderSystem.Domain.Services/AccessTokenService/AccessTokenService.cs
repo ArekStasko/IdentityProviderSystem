@@ -1,10 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using IdentityProviderSystem.Domain.Models.Token;
 using IdentityProviderSystem.Domain.Services.SaltService;
-using IdentityProviderSystem.Persistance.Repositories.TokenRepository;
+using IdentityProviderSystem.Persistance.Repositories.AccessTokenRepository;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -13,11 +12,11 @@ namespace IdentityProviderSystem.Domain.Services.TokenService;
 
 public class AccessTokenService : IAccessTokenService
 {
-    private readonly ITokenRepository _repository;
+    private readonly IAccessTokenRepository _repository;
     private readonly ISaltService _saltService;
     private readonly ILogger<IAccessTokenService> _logger;
 
-    public AccessTokenService(ITokenRepository repository, ISaltService saltService, ILogger<IAccessTokenService> logger)
+    public AccessTokenService(IAccessTokenRepository repository, ISaltService saltService, ILogger<IAccessTokenService> logger)
     {
         _repository = repository;
         _saltService = saltService;

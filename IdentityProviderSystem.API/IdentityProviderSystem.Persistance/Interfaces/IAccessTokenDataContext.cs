@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityProviderSystem.Persistance.Interfaces;
 
-public interface ITokenDataContext
+public interface IAccessTokenDataContext
 {
-    public DbSet<AccessToken> Tokens { get; set; }
+    public DbSet<AccessToken> AccessTokens { get; set; }
     int SaveChanges();
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
 }

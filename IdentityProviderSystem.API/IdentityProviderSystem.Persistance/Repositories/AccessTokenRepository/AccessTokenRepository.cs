@@ -8,10 +8,10 @@ namespace IdentityProviderSystem.Persistance.Repositories.AccessTokenRepository;
 
 public class AccessTokenRepository : IAccessTokenRepository
 {
-    private readonly ITokenDataContext _context;
+    private readonly IAccessTokenDataContext _context;
     private readonly ILogger<IAccessTokenRepository> _logger;
     
-    public AccessTokenRepository(ITokenDataContext context, ILogger<IAccessTokenRepository> logger)
+    public AccessTokenRepository(IAccessTokenDataContext context, ILogger<IAccessTokenRepository> logger)
     {
         _context = context;
         _logger = logger;
@@ -21,20 +21,20 @@ public class AccessTokenRepository : IAccessTokenRepository
     {
         try
         {
-            var tokenToDelete = await _context.Tokens.FirstOrDefaultAsync(t => t.Id == Id);
+            var tokenToDelete = await _context.AccessTokens.FirstOrDefaultAsync(t => t.Id == Id);
             if (tokenToDelete == null)
             {
-                _logger.LogError("There is no token with {id} Id", Id);
+                _logger.LogError("There is no access token with {id} Id", Id);
                 return new Result<bool>(false);
             }
 
-            _context.Tokens.Remove(tokenToDelete);
+            _context.AccessTokens.Remove(tokenToDelete);
             await _context.SaveChangesAsync();
             return new Result<bool>(true);
         }
         catch (Exception e)
         {
-            _logger.LogError("Remove token repository method failed with an exception: {e}", e);
+            _logger.LogError("Remove access token repository method failed with an exception: {e}", e);
             return new Result<bool>(e);
         }
     }
@@ -43,13 +43,13 @@ public class AccessTokenRepository : IAccessTokenRepository
     {
         try
         {
-           var result = await _context.Tokens.AddAsync((AccessToken)token);
+           var result = await _context.AccessTokens.AddAsync((AccessToken)token);
            await _context.SaveChangesAsync();
            return new Result<IAccessToken>(result.Entity);
         }
         catch (Exception e)
         {
-            _logger.LogError("Create token repository method failed with an exception: {e}", e);
+            _logger.LogError("Create access token repository method failed with an exception: {e}", e);
             return new Result<IAccessToken>(e);
         }
     }
@@ -58,10 +58,10 @@ public class AccessTokenRepository : IAccessTokenRepository
     {
         try
         {
-            var tokenToUpdate = await _context.Tokens.FirstOrDefaultAsync(t => t.Id == token.Id);
+            var tokenToUpdate = await _context.AccessTokens.FirstOrDefaultAsync(t => t.Id == token.Id);
             if (tokenToUpdate == null)
             {
-                _logger.LogError("There is no token with {id} Id", token.Id);
+                _logger.LogError("There is no access token with {id} Id", token.Id);
                 return new Result<IAccessToken>(new NullReferenceException());
             }
 
@@ -70,7 +70,7 @@ public class AccessTokenRepository : IAccessTokenRepository
         }
         catch (Exception e)
         {
-            _logger.LogError("Update token repository method failed with an exception: {e}", e);
+            _logger.LogError("Update access token repository method failed with an exception: {e}", e);
             return new Result<IAccessToken>(e);
         }
     }
@@ -79,7 +79,7 @@ public class AccessTokenRepository : IAccessTokenRepository
     { 
         try
         {
-            var token = await _context.Tokens.FirstOrDefaultAsync(t => t.UserId == userId);
+            var token = await _context.AccessTokens.FirstOrDefaultAsync(t => t.UserId == userId);
             if (token == null)
             {
                 _logger.LogError("User with {id} Id doesnt have any valid tokens");
@@ -98,7 +98,7 @@ public class AccessTokenRepository : IAccessTokenRepository
     { 
         try
         {
-            var tokens = await _context.Tokens.ToListAsync<IAccessToken>();
+            var tokens = await _context.AccessTokens.ToListAsync<IAccessToken>();
             return new Result<IList<IAccessToken>>(tokens);
         }
         catch (Exception e)

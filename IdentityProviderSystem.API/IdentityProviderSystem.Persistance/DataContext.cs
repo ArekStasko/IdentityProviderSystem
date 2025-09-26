@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityProviderSystem.Persistance;
 
-public class DataContext : DbContext, IUserDataContext, ISaltDataContext, ITokenDataContext
+public class DataContext : DbContext, IUserDataContext, ISaltDataContext, IAccessTokenDataContext
 {
     public DataContext(){}
 
@@ -14,5 +14,5 @@ public class DataContext : DbContext, IUserDataContext, ISaltDataContext, IToken
 
     public virtual DbSet<Salt> Salts { get; set; }
     public virtual DbSet<User> Users { get; set; }
-    public DbSet<AccessToken> Tokens { get; set; }
+    public DbSet<AccessToken> AccessTokens { get; set; }
 }

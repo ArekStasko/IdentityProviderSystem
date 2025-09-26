@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Coravel.Invocable;
 using IdentityProviderSystem.Domain.Models.Token;
-using IdentityProviderSystem.Persistance.Repositories.TokenRepository;
+using IdentityProviderSystem.Persistance.Repositories.AccessTokenRepository;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityProviderSystem.JobScheduler.Jobs;

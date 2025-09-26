@@ -1,6 +1,7 @@
 ﻿using IdentityProviderSystem.Persistance.Interfaces;
+using IdentityProviderSystem.Persistance.Repositories.AccessTokenRepository;
+using IdentityProviderSystem.Persistance.Repositories.RefreshTokenRepository;
 using IdentityProviderSystem.Persistance.Repositories.SaltRepository;
-using IdentityProviderSystem.Persistance.Repositories.TokenRepository;
 using IdentityProviderSystem.Persistance.Repositories.UserRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -21,16 +22,17 @@ public static class Extensions
 
         services.AddScoped<ISaltDataContext, DataContext>();
         services.AddScoped<IUserDataContext, DataContext>();
-        services.AddScoped<ITokenDataContext, DataContext>();
+        services.AddScoped<IAccessTokenDataContext, DataContext>();
     }
     
     public static void MigrateDatabase(this IApplicationBuilder app) => DataMigrationService.MigrationInitialization(app);
     
-    public static void AddRepositories(this IServiceCollection serivces)
+    public static void AddRepositories(this IServiceCollection services)
     {
-        serivces.AddScoped<IUserRepository, UserRepository>();
-        serivces.AddScoped<ISaltRepository, SaltRepository>();
-        serivces.AddScoped<IAccessTokenRepository, AccessTokenRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ISaltRepository, SaltRepository>();
+        services.AddScoped<IAccessTokenRepository, AccessTokenRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     }
     
     private static string GetConnectionString()

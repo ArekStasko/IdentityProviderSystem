@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Authentication;
+using AutoMapper;
 using IdentityProviderSystem.Domain.DTO;
 using IdentityProviderSystem.Domain.Models.Token;
 using IdentityProviderSystem.Domain.Models.User;
@@ -107,6 +108,33 @@ public class UserService : IUserService
         catch (Exception e)
         {
             _logger.LogError("Login user service throw an exception: {e}", e);
+            return new Result<SessionDTO>(e);
+        }
+    }
+
+    public async Task<Result<SessionDTO>> RefreshSession(string refreshToken)
+    {
+        try
+        {
+            _logger.LogInformation("Refresh session service called");
+            var isRefreshTokenValid = await _refreshTokenService.Validate(refreshToken);
+            var isValid = isRefreshTokenValid.Match<bool>(succ => succ, e =>
+            {
+                _logger.LogError("Validate token method throw an exception: {e}", e);
+                throw e;
+            });
+
+            if (!isValid)
+            {
+                _logger.LogError("Refresh token is not valid");
+                return new Result<SessionDTO>(new AuthenticationException());
+            }
+            
+            
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("RefreshSession method throw an exception: {e}", e);
             return new Result<SessionDTO>(e);
         }
     }

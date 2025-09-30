@@ -31,7 +31,7 @@ public class AccessTokenService : IAccessTokenService
 
             var secret = result.Match(succ => succ.ToString(), e =>
             {
-                _logger.LogError("Generate Token service failed while generating new token secret: {e}",e );
+                _logger.LogError("Generate Access Token service failed while generating new token secret: {e}",e );
                 throw e;
             });
             
@@ -61,13 +61,13 @@ public class AccessTokenService : IAccessTokenService
             var saveResult = await _repository.Create(token);
             return saveResult.Match(succ => new Result<IAccessToken>(succ), e =>
             {
-                _logger.LogError("Something went wrong while saving token to db: {e}", e);
+                _logger.LogError("Something went wrong while saving Access token to db: {e}", e);
                 return new Result<IAccessToken>(e);
             });
         }
         catch (Exception e)
         {
-            _logger.LogError("Generate Token failed with an exception: {e}", e);
+            _logger.LogError("Generate Access Token failed with an exception: {e}", e);
             return new Result<IAccessToken>(e);
         }
     }
@@ -79,7 +79,7 @@ public class AccessTokenService : IAccessTokenService
             var getTokensResult = await _repository.Get();
             var tokens = getTokensResult.Match(succ => succ, e =>
             {
-                _logger.LogError("Get tokens failed with an exception: {e}", e);
+                _logger.LogError("Get Access tokens failed with an exception: {e}", e);
                 throw e;
             });
             
@@ -89,7 +89,7 @@ public class AccessTokenService : IAccessTokenService
             var userIdClaim = jsonToken.Claims.FirstOrDefault(c => c.Type == "userId");
             if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
             {
-                _logger.LogError("Token does not contain userId claim");
+                _logger.LogError("Access Token does not contain userId claim");
                 return new Result<double>(0);
             }
 
@@ -97,7 +97,7 @@ public class AccessTokenService : IAccessTokenService
             var userToken = tokens.FirstOrDefault(t => t.UserId == userId);
             if (userToken == null)
             {
-                _logger.LogError("Token for user with Id: {id} expired", userId);
+                _logger.LogError("Access Token for user with Id: {id} expired", userId);
                 return new Result<double>(0);
             }
             
@@ -107,7 +107,7 @@ public class AccessTokenService : IAccessTokenService
         }
         catch (Exception e)
         {
-            _logger.LogError("Check Token Expiration failed with an exception: {e}", e);
+            _logger.LogError("Check Access Token Expiration failed with an exception: {e}", e);
             return new Result<double>(e);
         }
     }

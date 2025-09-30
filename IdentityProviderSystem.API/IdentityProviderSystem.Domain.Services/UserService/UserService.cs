@@ -95,14 +95,27 @@ public class UserService : IUserService
             var verifyLogin = VerifyHash(user.Password, userToLogin.Hash);
             if (verifyLogin)
             {
-                var token = await _accessTokenService.Generate(userToLogin.Id);
-                return token.Match(succ => new Result<SessionDTO>((ITokenResponse)succ), err =>
+                var accessTokenResult = await _accessTokenService.Generate(userToLogin.Id);
+                var accessToken = accessTokenResult.Match(succ => succ, err =>
                 {
-                    _logger.LogError("Token service failed while generating token: {e}", err);
-                    return new Result<SessionDTO>(err);
+                    _logger.LogError("User service failed while generating access token: {e}", err);
+                    throw err;
+                });
+                
+                var refreshTokenResult = await _refreshTokenService.Generate(userToLogin.Id);
+                var refreshToken = refreshTokenResult.Match(succ => succ, err =>
+                {
+                    _logger.LogError("User service failed while generating refresh token: {e}", err);
+                    throw err;
+                });
+
+                return new Result<SessionDTO>(new SessionDTO()
+                {
+                    AccessToken = accessToken.Value,
+                    RefreshToken = refreshToken.Value
                 });
             }
-
+            
             return new Result<SessionDTO>(new InvalidOperationException());
         }
         catch (Exception e)

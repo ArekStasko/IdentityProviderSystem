@@ -1,31 +1,67 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using IdentityProviderSystem.Domain.Models.Token;
+using IdentityProviderSystem.Domain.Services.SaltService;
 using IdentityProviderSystem.Persistance.Repositories.RefreshTokenRepository;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityProviderSystem.Domain.Services.RefreshTokenService;
 
 public class RefreshTokenService : IRefreshTokenService
 {
-    public IRefreshTokenRepository _refreshTokenRepository { get; }
+    public IRefreshTokenRepository _repository { get; }
+    public ISaltService _saltService { get; }
     public ILogger<RefreshTokenService> _logger { get; }
     
-    public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, ILogger<RefreshTokenService> logger)
+    public RefreshTokenService(IRefreshTokenRepository repository, ISaltService saltService, ILogger<RefreshTokenService> logger)
     {
-        _refreshTokenRepository = refreshTokenRepository;
+        _repository = repository;
+        _saltService = saltService;
         _logger = logger;
     }
     
-    public Task<Result<IToken>> Generate(int userId)
+    public async Task<Result<IToken>> Generate(int userId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            DateTime value = DateTime.UtcNow.AddMinutes(60);
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(),
+                Expires = value,
+            };
+            JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken tokenToWrite = jwtSecurityTokenHandler.CreateToken(tokenDescriptor);
+            var tokenValue = jwtSecurityTokenHandler.WriteToken(tokenToWrite);
+
+            IToken token = new RefreshToken()
+            {
+                Alive = true,
+                Value = tokenValue
+            };
+
+            var saveResult = await _repository.Create(token);
+            return saveResult.Match(succ => new Result<IToken>(succ), e =>
+            {
+                _logger.LogError("Something went wrong while saving refresh token to db: {e}", e);
+                return new Result<IToken>(e);
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Generate Refresh Token failed with an exception: {e}", e);
+            return new Result<IToken>(e);
+        }
     }
 
     public async Task<Result<bool>> Validate(string token)
     {
         try
         {
-            var tokensResult = await _refreshTokenRepository.Get();
+            var tokensResult = await _repository.Get();
             var tokens = tokensResult.Match<IList<IToken>>(succ => succ, e =>
             {
                 _logger.LogError("Fetch tokens from database throw an error: {e}", e);

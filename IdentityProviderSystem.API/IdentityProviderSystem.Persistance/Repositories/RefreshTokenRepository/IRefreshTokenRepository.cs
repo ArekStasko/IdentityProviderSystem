@@ -9,4 +9,5 @@ public interface IRefreshTokenRepository
     public Task<Result<IToken>> Create(IToken token);
     public Task<Result<IToken>> Update(IToken token);
     public Task<Result<IList<IToken>>> Get();
+    public Task<Result<IToken>> Get(string token);
 }

@@ -85,4 +85,23 @@ public class RefreshTokenService : IRefreshTokenService
             return new Result<bool>(false);
         }
     }
+
+    public async Task<Result<int>> GetUserId(string token)
+    {
+        try
+        {
+            _logger.LogError("Get user id by refresh token starts processing");
+            var refreshTokenResult = await _repository.Get(token);
+            return refreshTokenResult.Match(succ => succ.UserId, err =>
+            {
+                _logger.LogError("Get refresh token throw an error: {e}", err);
+                return new Result<int>(err);
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Validate refresh token method throw an exception: {e}", e);
+            return new Result<int>(e);
+        }
+    }
 }

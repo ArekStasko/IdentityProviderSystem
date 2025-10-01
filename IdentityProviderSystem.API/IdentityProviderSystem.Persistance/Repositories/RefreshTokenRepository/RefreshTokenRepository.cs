@@ -88,4 +88,24 @@ public class RefreshTokenRepository : IRefreshTokenRepository
             return new Result<IList<IToken>>(e);
         }
     }
+    
+    public async Task<Result<IToken>> Get(string token)
+    {
+        try
+        {
+            var tokens = await _context.RefreshTokens.ToListAsync<IToken>();
+            var tokenToReturn = tokens.FirstOrDefault(t => t.Value == token);
+            if (tokenToReturn == null)
+            {
+                _logger.LogError("There is no refresh token with {token} ", token);
+                return new Result<IToken>(new NullReferenceException());
+            }
+            return new Result<IToken>(tokenToReturn);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Get refresh token repository method failed with an exception: {e}", e);
+            return new Result<IToken>(e);
+        }
+    }
 }

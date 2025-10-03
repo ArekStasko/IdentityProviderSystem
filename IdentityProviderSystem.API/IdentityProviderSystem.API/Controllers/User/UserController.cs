@@ -23,7 +23,7 @@ public class UserController : ControllerBase
     [HttpPost(Name = "[controller]/register")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Exception))]
-    public async ValueTask<SessionDTO> Register(UserDTO registerRequest)
+    public async ValueTask<IActionResult> Register(UserDTO registerRequest)
     {
         _logger.LogInformation("Register endpoint starts processing");
         var result = await _userService.Register(registerRequest);
@@ -33,7 +33,7 @@ public class UserController : ControllerBase
     [HttpPost(Name = "[controller]/login")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Exception))]
-    public async ValueTask<SessionDTO> Login(UserDTO loginRequest)
+    public async ValueTask<IActionResult> Login(UserDTO loginRequest)
     {
         _logger.LogInformation("Login endpoint starts processing");
         var result = await _userService.Login(loginRequest);
@@ -43,7 +43,7 @@ public class UserController : ControllerBase
     [HttpPost(Name = "[controller]/refresh-session")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Exception))]
-    public async ValueTask<SessionDTO> Login(string refreshToken)
+    public async ValueTask<IActionResult> Login(string refreshToken)
     {
         _logger.LogInformation("Login endpoint starts processing");
         var result = await _userService.RefreshSession(refreshToken);

@@ -4,6 +4,5 @@ public interface IToken
 {
     public int UserId { get; set; }
     public int Id { get; set; }
-    public bool Alive { get; set; }
     public string Value { get; set; }
 }

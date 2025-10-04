@@ -54,7 +54,6 @@ public class AccessTokenService : IAccessTokenService
             {
                 UserId = userId,
                 Secret = secret,
-                Alive = true,
                 Value = tokenValue
             };
 

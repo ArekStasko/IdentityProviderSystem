@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace IdentityProviderSystem.JobScheduler.Jobs;
 
-public class TokenJob : IInvocable
+public class AccessTokenJob : IInvocable
 {
     private readonly IAccessTokenRepository _repository;
-    private readonly ILogger<TokenJob> _logger;
+    private readonly ILogger<AccessTokenJob> _logger;
 
-    public TokenJob(IAccessTokenRepository repository, ILogger<TokenJob> logger)
+    public AccessTokenJob(IAccessTokenRepository repository, ILogger<AccessTokenJob> logger)
     {
         _repository = repository;
         _logger = logger;
@@ -30,13 +30,6 @@ public class TokenJob : IInvocable
             
             foreach (IAccessToken token in tokens)
             {
-                if (token.Alive)
-                {
-                    token.Alive = false;
-                    await _repository.Update(token);
-                    return;
-                }
-                
                 JwtSecurityToken tokenToValidate = new JwtSecurityToken(token.Value);
                 bool isExpired = tokenToValidate.ValidTo < DateTime.UtcNow;
                 if (isExpired)

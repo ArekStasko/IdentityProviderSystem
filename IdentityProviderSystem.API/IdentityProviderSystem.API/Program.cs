@@ -43,7 +43,8 @@ app.UseCors(AllowSpecifiOrigin);
 app.Services.UseScheduler(scheduler =>
 {
     scheduler.Schedule<SaltJob>().EveryFiveMinutes();
-    scheduler.Schedule<TokenJob>().EveryMinute();
+    scheduler.Schedule<AccessTokenJob>().EveryMinute();
+    scheduler.Schedule<RefreshTokenJob>().EveryFiveMinutes();
 });
 
 if (app.Environment.IsDevelopment())

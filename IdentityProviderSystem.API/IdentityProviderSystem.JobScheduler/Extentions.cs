@@ -10,6 +10,7 @@ public static class Extentions
     {
         services.AddScheduler();
         services.AddTransient<SaltJob>();
-        services.AddTransient<TokenJob>();
+        services.AddTransient<AccessTokenJob>();
+        services.AddTransient<RefreshTokenJob>();
     }
 }

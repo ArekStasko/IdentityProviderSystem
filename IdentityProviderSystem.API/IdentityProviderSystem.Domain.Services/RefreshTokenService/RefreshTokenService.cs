@@ -39,7 +39,6 @@ public class RefreshTokenService : IRefreshTokenService
 
             IToken token = new RefreshToken()
             {
-                Alive = true,
                 Value = tokenValue
             };
 
@@ -73,11 +72,8 @@ public class RefreshTokenService : IRefreshTokenService
                 _logger.LogError("Received token does not exists");
                 return new Result<bool>(false);
             }
-
-            if (tokenToValidate.Alive)
-                return new Result<bool>(true);
             
-            return new Result<bool>(false);
+            return new Result<bool>(true);
         }
         catch (Exception e)
         {

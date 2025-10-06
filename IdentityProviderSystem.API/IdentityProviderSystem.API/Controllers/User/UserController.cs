@@ -43,7 +43,7 @@ public class UserController : ControllerBase
     [HttpPost(Name = "[controller]/refresh-session")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Exception))]
-    public async ValueTask<IActionResult> Login(string refreshToken)
+    public async ValueTask<IActionResult> RefreshSession(string refreshToken)
     {
         _logger.LogInformation("Login endpoint starts processing");
         var result = await _userService.RefreshSession(refreshToken);

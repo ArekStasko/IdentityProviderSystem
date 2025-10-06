@@ -23,6 +23,7 @@ public static class Extensions
         services.AddScoped<ISaltDataContext, DataContext>();
         services.AddScoped<IUserDataContext, DataContext>();
         services.AddScoped<IAccessTokenDataContext, DataContext>();
+        services.AddScoped<IRefreshTokenDataContext, DataContext>();
     }
     
     public static void MigrateDatabase(this IApplicationBuilder app) => DataMigrationService.MigrationInitialization(app);

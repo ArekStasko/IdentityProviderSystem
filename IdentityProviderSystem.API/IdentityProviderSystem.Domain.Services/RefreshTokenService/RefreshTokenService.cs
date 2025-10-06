@@ -39,6 +39,7 @@ public class RefreshTokenService : IRefreshTokenService
 
             IToken token = new RefreshToken()
             {
+                UserId = userId,
                 Value = tokenValue
             };
 

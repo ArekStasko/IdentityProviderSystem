@@ -148,6 +148,7 @@ public class UserService : IUserService
                 _logger.LogError("Get user id by refresh token throw an error: {e}", e);
                 throw e;
             });
+            
             var accessToken = (await _accessTokenService.Generate(userId)).Match(succ => succ, e =>
             {
                 _logger.LogError("Generate new access token failed with error: {e}", e);

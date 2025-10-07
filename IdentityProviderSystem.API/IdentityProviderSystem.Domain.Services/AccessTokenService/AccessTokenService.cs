@@ -4,6 +4,7 @@ using System.Text;
 using IdentityProviderSystem.Domain.Models.Token;
 using IdentityProviderSystem.Domain.Services.SaltService;
 using IdentityProviderSystem.Persistance.Repositories.AccessTokenRepository;
+using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -68,6 +69,30 @@ public class AccessTokenService : IAccessTokenService
         {
             _logger.LogError("Generate Access Token failed with an exception: {e}", e);
             return new Result<IAccessToken>(e);
+        }
+    }
+
+    public async Task<Result<bool>> RemoveAccessTokenIfExists(int userId)
+    {
+        try
+        {
+            var accessToken = (await _repository.Get(userId)).Match(succ => succ, e =>
+            {
+                _logger.LogError("Removing access tokens from access token db: {e}", e);
+                throw e;
+            });
+            
+            if(accessToken == null) return new Result<bool>(true);
+            return (await _repository.Remove(accessToken.Id)).Match(succ => succ, e =>
+            {
+                _logger.LogError("Removing access tokens from access token db: {e}", e);
+                throw e;
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Checking for existing access token failed with error: {e}", e);
+            throw;
         }
     }
 

@@ -148,6 +148,12 @@ public class UserService : IUserService
                 _logger.LogError("Get user id by refresh token throw an error: {e}", e);
                 throw e;
             });
+
+            _ = (await _accessTokenService.RemoveAccessTokenIfExists(userId)).Match(succ => succ, e =>
+            {
+                _logger.LogError("Removal of access token service failed");
+                throw e;
+            });
             
             var accessToken = (await _accessTokenService.Generate(userId)).Match(succ => succ, e =>
             {

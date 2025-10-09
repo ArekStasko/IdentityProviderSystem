@@ -125,6 +125,8 @@ public class AccessTokenService : IAccessTokenService
                 return new Result<double>(0);
             }
             
+            if(userToken.Value != token) return new Result<double>(0);
+            
             JwtSecurityToken tokenToValidate = new JwtSecurityToken(userToken.Value);
             double timeToExpire = (tokenToValidate.ValidTo - DateTime.UtcNow).TotalSeconds;
             return new Result<double>(timeToExpire);

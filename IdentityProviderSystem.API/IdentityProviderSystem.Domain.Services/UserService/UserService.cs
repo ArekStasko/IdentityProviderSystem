@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using System.Security.Authentication;
+using AutoMapper;
 using IdentityProviderSystem.Domain.DTO;
 using IdentityProviderSystem.Domain.Models.Token;
 using IdentityProviderSystem.Domain.Models.User;
+using IdentityProviderSystem.Domain.Services.RefreshTokenService;
 using IdentityProviderSystem.Domain.Services.SaltService;
 using IdentityProviderSystem.Domain.Services.TokenService;
 using IdentityProviderSystem.Persistance.Repositories.UserRepository;
@@ -14,20 +16,20 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _repository;
     private readonly ISaltService _saltService;
-    private readonly ITokenService _tokenService;
-    private readonly IMapper _mapper;
+    private readonly IAccessTokenService _accessTokenService;
+    private readonly IRefreshTokenService _refreshTokenService;
     private readonly ILogger<IUserService> _logger;
     
-    public UserService(IUserRepository repository, ISaltService saltService, ITokenService tokenService, IMapper mapper, ILogger<IUserService> logger)
+    public UserService(IUserRepository repository, ISaltService saltService, IAccessTokenService accessTokenService, IRefreshTokenService refreshTokenService, ILogger<IUserService> logger)
     {
         _repository = repository;
         _saltService = saltService;
-        _tokenService = tokenService;
-        _mapper = mapper;
+        _accessTokenService = accessTokenService;
+        _refreshTokenService = refreshTokenService;
         _logger = logger;
     }
     
-    public async Task<Result<ITokenResponse>> Register(UserDTO user)
+    public async Task<Result<SessionDTO>> Register(UserDTO user)
     {
         try
         {
@@ -52,21 +54,33 @@ public class UserService : IUserService
                 throw e;
             });
 
-            var token = await _tokenService.Generate(userId);
-            return token.Match(succ => new Result<ITokenResponse>((ITokenResponse)succ), err =>
+            var accessTokenResult = await _accessTokenService.Generate(userId);
+            var accessToken = accessTokenResult.Match<IAccessToken>(succ => succ, e =>
             {
-                _logger.LogError("Token service failed while generating token: {e}", err);
-                return new Result<ITokenResponse>(err);
+                _logger.LogError("Access token service failed while processing: {e}", e);
+                throw e;
+            });
+            var refreshTokenResult = await _refreshTokenService.Generate(userId);
+            var refreshToken = refreshTokenResult.Match<IToken>(succ => succ, e =>
+            {
+                _logger.LogError("Refresh token service failed while processing: {e}", e);
+                throw e;
+            });
+
+            return new Result<SessionDTO>(new SessionDTO()
+            {
+                AccessToken = accessToken.Value,
+                RefreshToken = refreshToken.Value,
             });
         }
         catch (Exception e)
         {
             _logger.LogError("Register user service throw an exception: {e}", e);
-            return new Result<ITokenResponse>(e);
+            return new Result<SessionDTO>(e);
         }
     }
 
-    public async Task<Result<ITokenResponse>> Login(UserDTO user)
+    public async Task<Result<SessionDTO>> Login(UserDTO user)
     {
         try
         {
@@ -76,25 +90,87 @@ public class UserService : IUserService
                 _logger.LogError("Get user repository method failed while processing: {e}", e);
                 return null;
             });
-            if (userToLogin == null) return new Result<ITokenResponse>(new NullReferenceException());
+            if (userToLogin == null) return new Result<SessionDTO>(new NullReferenceException());
 
             var verifyLogin = VerifyHash(user.Password, userToLogin.Hash);
             if (verifyLogin)
             {
-                var token = await _tokenService.Generate(userToLogin.Id);
-                return token.Match(succ => new Result<ITokenResponse>((ITokenResponse)succ), err =>
+                var accessTokenResult = await _accessTokenService.Generate(userToLogin.Id);
+                var accessToken = accessTokenResult.Match(succ => succ, err =>
                 {
-                    _logger.LogError("Token service failed while generating token: {e}", err);
-                    return new Result<ITokenResponse>(err);
+                    _logger.LogError("User service failed while generating access token: {e}", err);
+                    throw err;
+                });
+                
+                var refreshTokenResult = await _refreshTokenService.Generate(userToLogin.Id);
+                var refreshToken = refreshTokenResult.Match(succ => succ, err =>
+                {
+                    _logger.LogError("User service failed while generating refresh token: {e}", err);
+                    throw err;
+                });
+
+                return new Result<SessionDTO>(new SessionDTO()
+                {
+                    AccessToken = accessToken.Value,
+                    RefreshToken = refreshToken.Value
                 });
             }
-
-            return new Result<ITokenResponse>(new InvalidOperationException());
+            
+            return new Result<SessionDTO>(new InvalidOperationException());
         }
         catch (Exception e)
         {
             _logger.LogError("Login user service throw an exception: {e}", e);
-            return new Result<ITokenResponse>(e);
+            return new Result<SessionDTO>(e);
+        }
+    }
+
+    public async Task<Result<SessionDTO>> RefreshSession(string refreshToken)
+    {
+        try
+        {
+            _logger.LogInformation("Refresh session service called");
+            var isRefreshTokenValid = await _refreshTokenService.Validate(refreshToken);
+            var isValid = isRefreshTokenValid.Match<bool>(succ => succ, e =>
+            {
+                _logger.LogError("Validate token method throw an exception: {e}", e);
+                throw e;
+            });
+
+            if (!isValid)
+            {
+                _logger.LogError("Refresh token is not valid");
+                return new Result<SessionDTO>(new AuthenticationException());
+            }
+            
+            var userId = (await _refreshTokenService.GetUserId(refreshToken)).Match<int>(succ => succ, e =>
+            {
+                _logger.LogError("Get user id by refresh token throw an error: {e}", e);
+                throw e;
+            });
+
+            _ = (await _accessTokenService.RemoveAccessTokenIfExists(userId)).Match(succ => succ, e =>
+            {
+                _logger.LogError("Removal of access token service failed");
+                throw e;
+            });
+            
+            var accessToken = (await _accessTokenService.Generate(userId)).Match(succ => succ, e =>
+            {
+                _logger.LogError("Generate new access token failed with error: {e}", e);
+                throw e;
+            });
+
+            return new Result<SessionDTO>(new SessionDTO()
+            {
+                AccessToken = accessToken.Value,
+                RefreshToken = refreshToken
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("RefreshSession method throw an exception: {e}", e);
+            return new Result<SessionDTO>(e);
         }
     }
 

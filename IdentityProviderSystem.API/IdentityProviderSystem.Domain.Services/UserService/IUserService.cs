@@ -7,6 +7,7 @@ namespace IdentityProviderSystem.Domain.Services.UserService;
 
 public interface IUserService
 {
-    public Task<Result<ITokenResponse>> Register(UserDTO user);
-    public Task<Result<ITokenResponse>> Login(UserDTO user);
+    public Task<Result<SessionDTO>> Register(UserDTO user);
+    public Task<Result<SessionDTO>> Login(UserDTO user);
+    public Task<Result<SessionDTO>> RefreshSession(string refreshToken);
 }

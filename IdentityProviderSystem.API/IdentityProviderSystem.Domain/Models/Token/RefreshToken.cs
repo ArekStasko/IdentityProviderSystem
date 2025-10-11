@@ -1,6 +1,6 @@
-﻿namespace IdentityProviderSystem.Domain.Models.Token;
+namespace IdentityProviderSystem.Domain.Models.Token;
 
-public interface IToken 
+public class RefreshToken : IToken
 {
     public int UserId { get; set; }
     public int Id { get; set; }

@@ -8,7 +8,7 @@ import {logout} from "../slices/authSlice";
 
 const useTokenTracking = () => {
     const navigate = useNavigate();
-    const [token, setToken] = useState<string | undefined>(undefined);
+    const [token, setToken] = useState<string | undefined>(GetToken());
     const [interval, setInterval] = useState<number | undefined>(undefined);
     const { data: isTokenValid, isFetching, refetch } = useCheckTokenQuery(token!, { skip: !token });
     const dispatch = useDispatch();
@@ -17,13 +17,10 @@ const useTokenTracking = () => {
     const dasboardRoute = useSelector((state: RootState) => state.auth.dasboardRoute);
 
     useEffect(() => {
-
         const token = GetToken();
         setToken(token);
         if(isAuth){
-            const intervalToSet = window.setInterval(() => {
-                refetch();
-            }, 30000);
+            const intervalToSet = window.setInterval(() => refetch(), 30000);
             setInterval(intervalToSet);
             navigate(dasboardRoute);
         }

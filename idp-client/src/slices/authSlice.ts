@@ -19,7 +19,6 @@ const authSlice = createSlice({
         logout(state) {
             DeleteToken();
             state.isAuthenticated = false;
-            //window.location.pathname = routingConstants.authBasic
         },
         setAuthBaseRoute(state, action: PayloadAction<string>) {
             state.authBaseRoute = action.payload;

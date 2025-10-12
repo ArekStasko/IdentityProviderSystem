@@ -1,12 +1,12 @@
 import idpApi from "../../api/idpApi";
 
-export const checkTokenExpirationApi = idpApi.injectEndpoints({
+export const validateTokenApi = idpApi.injectEndpoints({
     endpoints: (build) => ({
-        checkToken: build.query<boolean, string>({
-            query: (token: string) => `/token/checkTokenExp?token=${token}`
+        validateToken: build.query<boolean, string>({
+            query: (accessToken: string) => `/access-token/validate?token=${accessToken}`
         })
     }),
     overrideExisting: false
 });
 
-export const { useCheckTokenQuery } = checkTokenExpirationApi;
+export const { useValidateTokenQuery } = validateTokenApi;

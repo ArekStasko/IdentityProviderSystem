@@ -13,7 +13,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login(state, action) {
-            SaveToken(action.payload.token);
+            SaveToken(action.payload.RefreshToken);
             state.isAuthenticated = true;
         },
         logout(state) {

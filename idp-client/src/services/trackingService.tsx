@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router";
 import { login } from "../slices/authSlice";
-import {GetToken} from "./cookieService";
+import { GetRefreshToken } from "./cookieService";
 
 interface TrackingServiceProps {
     children: React.ReactNode;
@@ -18,10 +18,10 @@ const TrackingService = ({children}: TrackingServiceProps) => {
     useEffect(() => {
         const parts = location.pathname.split('/');
         const token = parts.length === 4 ? parts[3] : null;
-        const cachedToken = GetToken();
+        const refreshToken = GetRefreshToken();
 
-        if(cachedToken) {
-            dispatch(login({token: cachedToken}))
+        if(refreshToken) {
+
             return;
         }
 

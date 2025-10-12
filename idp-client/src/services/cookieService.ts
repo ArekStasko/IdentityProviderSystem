@@ -1,15 +1,15 @@
 import Cookies from 'js-cookie';
 
 export const SaveToken = (token: string) => {
-    Cookies.set('token', token);
+    Cookies.set('refreshToken', token);
 };
 
 export const DeleteToken = () => {
-    Cookies.remove('token');
+    Cookies.remove('refreshToken');
 };
 
-export const GetToken = (): string | undefined => {
-    const token = Cookies.get('token');
+export const GetRefreshToken = (): string | undefined => {
+    const token = Cookies.get('refreshToken');
     if (!token) return undefined;
     return token;
 };

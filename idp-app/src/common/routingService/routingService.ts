@@ -1,8 +1,8 @@
 import {GetReturnSite} from "../cookies/cookieService";
 
-export const returnToBaseSite = (userId: string, token: string) => {
+export const returnToBaseSite = (refreshToken: string, accessToken: string) => {
     const returnSite = GetReturnSite();
     if(!returnSite) return;
-    const url = `${returnSite}/${userId}/${token}`
+    const url = `${returnSite}/${refreshToken}/${accessToken}`
     window.location.href = url;
 }

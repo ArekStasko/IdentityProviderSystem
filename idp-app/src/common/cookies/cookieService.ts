@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie'
 
 export type UserData = {
-    id: number,
-    value: string
+    refreshToken: string,
+    accessToken: string
 }
 
 export const SaveReturnSite = (returnSite: string) => {

@@ -25,7 +25,7 @@ export const Login = () => {
         } as LoginRequest
         const result = await login(loginRequest)
         if("data" in result){
-            returnToBaseSite(result.data.id.toString(), result.data.value)
+            returnToBaseSite(result.data.refreshToken, result.data.accessToken)
         }
     }
 

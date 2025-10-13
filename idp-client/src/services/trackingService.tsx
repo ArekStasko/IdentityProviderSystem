@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import { useLocation } from "react-router";
-import {refreshAccessToken} from "../slices/authSlice";
+import {onSuccessfullLogin, refreshAccessToken} from "../slices/authSlice";
 import { GetRefreshToken} from "./cookieService";
 import {useRefreshSessionMutation} from "../RTK/refreshSession/refreshSession";
 import {RootState} from "../IdpClient";
@@ -13,7 +13,6 @@ interface TrackingServiceProps {
 
 const TrackingService = ({children}: TrackingServiceProps) => {
     const [refreshSession, { data }] = useRefreshSessionMutation();
-    const dispatch = useDispatch();
     const accessToken = useSelector((state: RootState) => state.auth.accessToken);
     const location = useLocation();
 
@@ -34,8 +33,11 @@ const TrackingService = ({children}: TrackingServiceProps) => {
     }, [data]);
 
     useMemo(() => {
-        //const parts = location.pathname.split('/');
-        //const token = parts.length === 4 ? parts[3] : null;
+        const parts = location.pathname.split('/');
+        const refreshToken = parts.length === 4 ? parts[3] : null;
+        const accessToken = parts.length === 4 ? parts[4] : null;
+
+        if(refreshToken && accessToken) onSuccessfullLogin({accessToken, refreshToken});
     }, [location.pathname]);
 
     return (

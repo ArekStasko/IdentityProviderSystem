@@ -16,8 +16,6 @@ const TrackingService = ({children}: TrackingServiceProps) => {
     const location = useLocation();
 
     useEffect(() => {
-        //const parts = location.pathname.split('/');
-        //const token = parts.length === 4 ? parts[3] : null;
         const refreshToken = GetRefreshToken();
 
         if(refreshToken) {
@@ -25,7 +23,12 @@ const TrackingService = ({children}: TrackingServiceProps) => {
             runRefreshSession().catch(console.error);
             return;
         }
-    }, [location]);
+    }, []);
+
+    useMemo(() => {
+        //const parts = location.pathname.split('/');
+        //const token = parts.length === 4 ? parts[3] : null;
+    }, [location.pathname]);
 
     useMemo(() => {
         if(data) dispatch(login(data))

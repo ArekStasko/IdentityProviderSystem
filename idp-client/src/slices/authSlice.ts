@@ -1,11 +1,11 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {DeleteToken, SaveToken} from "../services/cookieService";
+import {DeleteRefreshToken, SaveRefreshToken} from "../services/cookieService";
 
 export type AuthSliceState = {
     isAuthenticated: boolean;
     authBaseRoute: string;
     dasboardRoute: string;
-    accessToken: string;
+    accessToken: string | null;
 };
 const initialState = {isAuthenticated: false, authBaseRoute: ""} as AuthSliceState;
 
@@ -13,16 +13,19 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        login(state, action) {
-            SaveToken(action.payload.RefreshToken);
+        onSuccessfullLogin(state, action) {
+            SaveRefreshToken(action.payload.RefreshToken);
+            state.accessToken = action.payload.AccessToken;
             state.isAuthenticated = true;
         },
-        logout(state) {
-            DeleteToken();
+        onSuccessfullLogout(state) {
+            DeleteRefreshToken();
+            state.accessToken = null;
             state.isAuthenticated = false;
         },
-        setAccessToken(state, action: PayloadAction<string>){
-          state.accessToken = action.payload
+        refreshAccessToken(state, action){
+            state.accessToken = action.payload
+            state.isAuthenticated = true;
         },
         setAuthBaseRoute(state, action: PayloadAction<string>) {
             state.authBaseRoute = action.payload;
@@ -33,5 +36,5 @@ const authSlice = createSlice({
     }
 })
 
-export const {login, logout, setAccessToken, setAuthBaseRoute, setDashboardRoute} = authSlice.actions;
+export const {onSuccessfullLogin, onSuccessfullLogout, refreshAccessToken, setAuthBaseRoute, setDashboardRoute} = authSlice.actions;
 export default authSlice.reducer

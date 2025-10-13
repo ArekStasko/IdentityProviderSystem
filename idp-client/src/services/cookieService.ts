@@ -1,10 +1,10 @@
 import Cookies from 'js-cookie';
 
-export const SaveToken = (token: string) => {
+export const SaveRefreshToken = (token: string) => {
     Cookies.set('refreshToken', token);
 };
 
-export const DeleteToken = () => {
+export const DeleteRefreshToken = () => {
     Cookies.remove('refreshToken');
 };
 

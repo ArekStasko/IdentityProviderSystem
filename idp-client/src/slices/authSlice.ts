@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {DeleteRefreshToken, SaveRefreshToken} from "../services/cookieService";
+import {DeleteRefreshToken, SaveRefreshToken} from "../services/localStorageService";
 
 export type AuthSliceState = {
     isAuthenticated: boolean;

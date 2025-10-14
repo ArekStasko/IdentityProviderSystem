@@ -2,7 +2,7 @@ import React, {useEffect, useMemo} from "react";
 import {useSelector} from "react-redux";
 import { useLocation } from "react-router";
 import {onSuccessfullLogin, refreshAccessToken} from "../slices/authSlice";
-import { GetRefreshToken} from "./cookieService";
+import { GetRefreshToken} from "./localStorageService";
 import {useRefreshSessionMutation} from "../RTK/refreshSession/refreshSession";
 import {RootState} from "../IdpClient";
 

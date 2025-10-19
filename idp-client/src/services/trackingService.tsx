@@ -18,7 +18,8 @@ const TrackingService = ({children}: TrackingServiceProps) => {
 
     useEffect(() => {
         const refreshToken = GetRefreshToken();
-
+        console.log("REFRESH TOKEN")
+        console.log(refreshToken);
         if(refreshToken && !accessToken) {
             const runRefreshSession = async () => await refreshSession(refreshToken).unwrap();
             runRefreshSession().catch(console.error);
@@ -34,9 +35,13 @@ const TrackingService = ({children}: TrackingServiceProps) => {
 
     useMemo(() => {
         const parts = location.pathname.split('/');
-        const refreshToken = parts.length === 4 ? parts[3] : null;
-        const accessToken = parts.length === 4 ? parts[4] : null;
-
+        const refreshToken = parts.length === 4 ? parts[2] : null;
+        const accessToken = parts.length === 4 ? parts[3] : null;
+        console.log("---")
+        console.log(parts)
+        console.log(accessToken)
+        console.log(refreshToken)
+        console.log("---")
         if(refreshToken && accessToken) onSuccessfullLogin({accessToken, refreshToken});
     }, [location.pathname]);
 

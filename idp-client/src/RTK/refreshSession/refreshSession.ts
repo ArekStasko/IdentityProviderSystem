@@ -4,7 +4,11 @@ import {UserData} from "../../models/UserData";
 export const refreshSessionApi = idpApi.injectEndpoints({
     endpoints: (build) => ({
         refreshSession: build.mutation<UserData, string>({
-            query: (refreshToken: string) => `/user/RefreshSession?refreshToken=${refreshToken}`
+            query: (refreshToken: string) => ({
+                url: `/user/RefreshSession?refreshToken=${refreshToken}`,
+                method: 'POST',
+                body: {}
+            })
         })
     }),
     overrideExisting: false

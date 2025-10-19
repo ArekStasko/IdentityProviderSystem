@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { useLocation } from "react-router";
 import {onSuccessfullLogin, refreshAccessToken} from "../slices/authSlice";
 import { GetRefreshToken} from "./localStorageService";
@@ -15,6 +15,7 @@ const TrackingService = ({children}: TrackingServiceProps) => {
     const [refreshSession, { data }] = useRefreshSessionMutation();
     const accessToken = useSelector((state: RootState) => state.auth.accessToken);
     const location = useLocation();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const refreshToken = GetRefreshToken();
@@ -29,7 +30,7 @@ const TrackingService = ({children}: TrackingServiceProps) => {
 
     useEffect(() => {
         if(data && data.accessToken && data.refreshToken){
-            refreshAccessToken(data.accessToken);
+            dispatch(refreshAccessToken(data.accessToken));
         }
     }, [data]);
 
@@ -42,7 +43,7 @@ const TrackingService = ({children}: TrackingServiceProps) => {
         console.log(accessToken)
         console.log(refreshToken)
         console.log("---")
-        if(refreshToken && accessToken) onSuccessfullLogin({accessToken, refreshToken});
+        if(refreshToken && accessToken) dispatch(onSuccessfullLogin({accessToken, refreshToken}));
     }, [location.pathname]);
 
     return (

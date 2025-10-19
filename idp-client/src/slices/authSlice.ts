@@ -14,8 +14,11 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         onSuccessfullLogin(state, action) {
-            SaveRefreshToken(action.payload.RefreshToken);
-            state.accessToken = action.payload.AccessToken;
+            console.log("ON SUCCESSFULL LOGIN")
+            console.log(action.payload);
+            console.log("---")
+            SaveRefreshToken(action.payload.refreshToken);
+            state.accessToken = action.payload.accessToken;
             state.isAuthenticated = true;
         },
         onSuccessfullLogout(state) {

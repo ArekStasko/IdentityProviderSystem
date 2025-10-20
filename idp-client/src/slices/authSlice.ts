@@ -14,9 +14,6 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         onSuccessfullLogin(state, action) {
-            console.log("ON SUCCESSFULL LOGIN")
-            console.log(action.payload);
-            console.log("---")
             SaveRefreshToken(action.payload.refreshToken);
             state.accessToken = action.payload.accessToken;
             state.isAuthenticated = true;

@@ -1,7 +1,8 @@
-import React, {useMemo} from "react";
-import {useDispatch} from "react-redux";
-import { useLocation } from "react-router";
+import React, {useEffect, useMemo} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import { useLocation, useNavigate } from "react-router";
 import {onSuccessfullLogin} from "../slices/authSlice";
+import {RootState} from "../IdpClient";
 
 interface TrackingServiceProps {
     children: React.ReactNode;
@@ -10,7 +11,16 @@ interface TrackingServiceProps {
 
 const TrackingService = ({children}: TrackingServiceProps) => {
     const location = useLocation();
+    const navigate = useNavigate();
+    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    const dashboardRoute = useSelector((state: RootState) => state.auth.dasboardRoute);
+    const authBaseRoute = useSelector((state: RootState) => state.auth.authBaseRoute);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(isAuthenticated) navigate(dashboardRoute);
+        navigate(authBaseRoute);
+    }, [isAuthenticated]);
 
     useMemo(() => {
         const parts = location.pathname.split('/');

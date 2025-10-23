@@ -5,7 +5,6 @@ import {useEffect} from "react";
 import {GetRefreshToken} from "../../services/localStorageService";
 import {refreshAccessToken} from "../../slices/authSlice";
 
-
 const useSessionControll = () => {
     const [refreshSession, { data }] = useRefreshSessionMutation();
     const accessToken = useSelector((state: RootState) => state.auth.accessToken);

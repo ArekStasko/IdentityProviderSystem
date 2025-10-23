@@ -3,13 +3,17 @@ import {useDispatch, useSelector} from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import {onSuccessfullLogin} from "../slices/authSlice";
 import {RootState} from "../IdpClient";
+import {ExpirationBanner} from "../models/ExpirationBannerInterface";
 
 interface TrackingServiceProps {
     children: React.ReactNode;
+    ExpirationBanner: React.ComponentType<ExpirationBanner>
 }
 
 
-const TrackingService = ({children}: TrackingServiceProps) => {
+const TrackingService = ({children, ExpirationBanner}: TrackingServiceProps) => {
+    // true for test purposes
+    const [closeExpirationBanner, setCloseExpirationBanner] = React.useState(true);
     const location = useLocation();
     const navigate = useNavigate();
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -31,6 +35,12 @@ const TrackingService = ({children}: TrackingServiceProps) => {
 
     return (
         <>
+            <ExpirationBanner
+                close={closeExpirationBanner}
+                onClose={() => setCloseExpirationBanner(false)}
+                onRefresh={() => console.log("refresh")}
+                onLogout={() => console.log("refresh")}
+                />
             {children}
         </>
     )

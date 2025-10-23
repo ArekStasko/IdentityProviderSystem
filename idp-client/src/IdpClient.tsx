@@ -6,7 +6,7 @@ import idpApi from "./api/idpApi";
 import authReducer, {AuthSliceState, setAuthBaseRoute, setDashboardRoute} from "./slices/authSlice";
 import TrackingService from "./services/trackingService";
 import useSessionControll from "./RTK/sessionControl/sessionControll";
-import ExpirationBanner from "./services/expirationBanner";
+import {ExpirationBanner} from "./models/ExpirationBannerInterface";
 
 export interface RootState {
     auth: AuthSliceState
@@ -17,10 +17,10 @@ interface IdpClientProps {
     clientApi: any;
     authBaseRoute: string;
     dashboardRoute: string;
-    renderExpirationBanner: () => React.ReactNode;
+    expirationBanner: React.ComponentType<ExpirationBanner>
 }
 
-const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute, renderExpirationBanner}: IdpClientProps) => {
+const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute, expirationBanner}: IdpClientProps) => {
 
     const store = configureStore({
         reducer: {
@@ -37,8 +37,7 @@ const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute, renderEx
     useSessionControll();
     return(
         <Provider store={store}>
-            <TrackingService>
-                <ExpirationBanner onExpiration={renderExpirationBanner} />
+            <TrackingService ExpirationBanner={expirationBanner}>
                 {children}
             </TrackingService>
         </Provider>

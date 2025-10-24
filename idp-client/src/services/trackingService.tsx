@@ -3,11 +3,11 @@ import {useDispatch, useSelector} from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import {onSuccessfullLogin} from "../slices/authSlice";
 import {RootState} from "../IdpClient";
-import {ExpirationBanner} from "../models/ExpirationBannerInterface";
+import {ExpirationBannerInterface} from "../models/ExpirationBannerInterface";
 
 interface TrackingServiceProps {
     children: React.ReactNode;
-    ExpirationBanner: React.ComponentType<ExpirationBanner>
+    ExpirationBanner: React.ComponentType<ExpirationBannerInterface>
 }
 
 
@@ -36,7 +36,7 @@ const TrackingService = ({children, ExpirationBanner}: TrackingServiceProps) => 
     return (
         <>
             <ExpirationBanner
-                close={closeExpirationBanner}
+                open={closeExpirationBanner}
                 onClose={() => setCloseExpirationBanner(false)}
                 onRefresh={() => console.log("refresh")}
                 onLogout={() => console.log("refresh")}

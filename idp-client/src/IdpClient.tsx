@@ -5,7 +5,6 @@ import {configureStore, Middleware} from "@reduxjs/toolkit";
 import idpApi from "./api/idpApi";
 import authReducer, {AuthSliceState, setAuthBaseRoute, setDashboardRoute} from "./slices/authSlice";
 import TrackingService from "./services/trackingService";
-import useSessionControll from "./RTK/sessionControl/sessionControll";
 import {ExpirationBannerInterface} from "./models/ExpirationBannerInterface";
 
 export interface RootState {
@@ -34,7 +33,6 @@ const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute, expirati
     store.dispatch(setAuthBaseRoute(authBaseRoute));
     store.dispatch(setDashboardRoute(dashboardRoute));
 
-    useSessionControll();
     return(
         <Provider store={store}>
             <TrackingService ExpirationBanner={expirationBanner}>

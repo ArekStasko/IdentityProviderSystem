@@ -1,11 +1,12 @@
 import {useRefreshSessionMutation} from "../refreshSession/refreshSession";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../IdpClient";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {GetRefreshToken} from "../../services/localStorageService";
 import {refreshAccessToken} from "../../slices/authSlice";
 
 const useSessionControll = () => {
+    const [sessionExpired, setSessionExpired] = React.useState(false);
     const [refreshSession, { data }] = useRefreshSessionMutation();
     const accessToken = useSelector((state: RootState) => state.auth.accessToken);
     const dispatch = useDispatch();
@@ -24,6 +25,27 @@ const useSessionControll = () => {
             dispatch(refreshAccessToken(data.accessToken));
         }
     }, [data]);
+
+    const onRefreshSession = async () => {
+        const refreshToken = GetRefreshToken();
+
+        if(refreshToken){
+            await refreshSession(refreshToken);
+            setSessionExpired(false)
+        }
+
+    }
+
+    const onLogout = () => {
+        console.log("Logout")
+    }
+
+    return {
+        sessionExpired,
+        setSessionExpired,
+        onRefreshSession,
+        onLogout
+    }
 }
 
 export default useSessionControll;

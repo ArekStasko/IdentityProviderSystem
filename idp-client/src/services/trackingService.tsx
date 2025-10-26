@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import {onSuccessfullLogin} from "../slices/authSlice";
 import {RootState} from "../IdpClient";
 import {ExpirationBannerInterface} from "../models/ExpirationBannerInterface";
+import useSessionControll from "../RTK/sessionControl/sessionControll";
 
 interface TrackingServiceProps {
     children: React.ReactNode;
@@ -12,8 +13,7 @@ interface TrackingServiceProps {
 
 
 const TrackingService = ({children, ExpirationBanner}: TrackingServiceProps) => {
-    // true for test purposes
-    const [closeExpirationBanner, setCloseExpirationBanner] = React.useState(true);
+    const { sessionExpired, setSessionExpired, onRefreshSession, onLogout } = useSessionControll();
     const location = useLocation();
     const navigate = useNavigate();
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -36,10 +36,10 @@ const TrackingService = ({children, ExpirationBanner}: TrackingServiceProps) => 
     return (
         <>
             <ExpirationBanner
-                open={closeExpirationBanner}
-                onClose={() => setCloseExpirationBanner(false)}
-                onRefresh={() => console.log("refresh")}
-                onLogout={() => console.log("refresh")}
+                open={sessionExpired}
+                onClose={() => setSessionExpired(false)}
+                onRefresh={() => onRefreshSession()}
+                onLogout={() => onLogout()}
                 />
             {children}
         </>

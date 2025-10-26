@@ -7,6 +7,7 @@ import {refreshAccessToken} from "../../slices/authSlice";
 
 const useSessionControll = () => {
     const [sessionExpired, setSessionExpired] = React.useState(false);
+    const [intervalId, setIntervalId] = React.useState<number | null>(null);
     const [refreshSession, { data }] = useRefreshSessionMutation();
     const accessToken = useSelector((state: RootState) => state.auth.accessToken);
     const dispatch = useDispatch();
@@ -19,6 +20,19 @@ const useSessionControll = () => {
             return;
         }
     }, []);
+
+    useEffect(() => {
+        if(accessToken){
+            const interval = window.setInterval(() => {
+                console.log("Check if access token is valid")
+            });
+            setIntervalId(interval)
+        }
+
+        if(intervalId && !accessToken){
+            window.clearInterval(intervalId);
+        }
+    }, [accessToken])
 
     useEffect(() => {
         if(!data) return;

@@ -38,8 +38,8 @@ const TrackingService = ({children, ExpirationBanner}: TrackingServiceProps) => 
             <ExpirationBanner
                 open={sessionExpired}
                 onClose={() => setSessionExpired(false)}
-                onRefresh={() => onRefreshSession()}
-                onLogout={() => onLogout()}
+                onRefresh={async () => await onRefreshSession()}
+                onLogout={async () => await onLogout()}
                 />
             {children}
         </>

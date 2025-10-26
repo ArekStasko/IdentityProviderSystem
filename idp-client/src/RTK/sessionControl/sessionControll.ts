@@ -21,8 +21,11 @@ const useSessionControll = () => {
     }, []);
 
     useEffect(() => {
-        if(data && data.accessToken && data.refreshToken){
+        if(!data) return;
+        if('error' in data) return;
+        if(data.accessToken && data.refreshToken){
             dispatch(refreshAccessToken(data.accessToken));
+            setSessionExpired(false)
         }
     }, [data]);
 
@@ -31,12 +34,10 @@ const useSessionControll = () => {
 
         if(refreshToken){
             await refreshSession(refreshToken);
-            setSessionExpired(false)
         }
-
     }
 
-    const onLogout = () => {
+    const onLogout = async () => {
         console.log("Logout")
     }
 

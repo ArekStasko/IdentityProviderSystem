@@ -4,11 +4,13 @@ import {RootState} from "../../IdpClient";
 import React, {useEffect} from "react";
 import {GetRefreshToken} from "../../services/localStorageService";
 import {refreshAccessToken} from "../../slices/authSlice";
+import { useLazyValidateTokenQuery } from "../validateTokenApi/validateTokenApi";
 
 const useSessionControll = () => {
     const [sessionExpired, setSessionExpired] = React.useState(false);
     const [intervalId, setIntervalId] = React.useState<number | null>(null);
-    const [refreshSession, { data }] = useRefreshSessionMutation();
+    const [validateToken, { data: tokenValidationTime }] = useLazyValidateTokenQuery();
+    const [refreshSession, { data: refreshSessionData }] = useRefreshSessionMutation();
     const accessToken = useSelector((state: RootState) => state.auth.accessToken);
     const dispatch = useDispatch();
 
@@ -22,9 +24,16 @@ const useSessionControll = () => {
     }, []);
 
     useEffect(() => {
+        if(!tokenValidationTime) return;
+        if(tokenValidationTime <= 0) {
+            setSessionExpired(true);
+        }
+    }, [tokenValidationTime]);
+
+    useEffect(() => {
         if(accessToken){
             const interval = window.setInterval(() => {
-                console.log("Check if access token is valid")
+                validateToken(accessToken);
             });
             setIntervalId(interval)
         }
@@ -35,13 +44,13 @@ const useSessionControll = () => {
     }, [accessToken])
 
     useEffect(() => {
-        if(!data) return;
+        if(!refreshSessionData) return;
         if('error' in data) return;
-        if(data.accessToken && data.refreshToken){
+        if(refreshSessionData.accessToken && data.refreshToken){
             dispatch(refreshAccessToken(data.accessToken));
             setSessionExpired(false)
         }
-    }, [data]);
+    }, [refreshSessionData]);
 
     const onRefreshSession = async () => {
         const refreshToken = GetRefreshToken();

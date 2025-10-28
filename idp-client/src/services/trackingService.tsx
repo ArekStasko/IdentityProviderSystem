@@ -13,7 +13,7 @@ interface TrackingServiceProps {
 
 
 const TrackingService = ({children, ExpirationBanner}: TrackingServiceProps) => {
-    const { sessionExpired, setSessionExpired, onRefreshSession, onLogout } = useSessionControll();
+    const { sessionExpired, onRefreshSession, onLogout } = useSessionControll();
     const location = useLocation();
     const navigate = useNavigate();
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -37,7 +37,7 @@ const TrackingService = ({children, ExpirationBanner}: TrackingServiceProps) => 
         <>
             <ExpirationBanner
                 open={sessionExpired}
-                onClose={() => setSessionExpired(false)}
+                onClose={async () => await onLogout()}
                 onRefresh={async () => await onRefreshSession()}
                 onLogout={async () => await onLogout()}
                 />

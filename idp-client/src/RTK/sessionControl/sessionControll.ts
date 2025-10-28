@@ -5,6 +5,7 @@ import React, {useEffect} from "react";
 import {GetRefreshToken} from "../../services/localStorageService";
 import {refreshAccessToken} from "../../slices/authSlice";
 import { useLazyValidateTokenQuery } from "../validateTokenApi/validateTokenApi";
+import {useNavigate} from "react-router";
 
 const useSessionControll = () => {
     const [sessionExpired, setSessionExpired] = React.useState(false);
@@ -12,6 +13,8 @@ const useSessionControll = () => {
     const [validateToken, { data: tokenValidationTime }] = useLazyValidateTokenQuery();
     const [refreshSession, { data: refreshSessionData }] = useRefreshSessionMutation();
     const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+    const authBaseRoute = useSelector((state: RootState) => state.auth.authBaseRoute);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -45,9 +48,9 @@ const useSessionControll = () => {
 
     useEffect(() => {
         if(!refreshSessionData) return;
-        if('error' in data) return;
-        if(refreshSessionData.accessToken && data.refreshToken){
-            dispatch(refreshAccessToken(data.accessToken));
+        if('error' in refreshSessionData) return;
+        if(refreshSessionData.accessToken && refreshSessionData.refreshToken){
+            dispatch(refreshAccessToken(refreshSessionData.accessToken));
             setSessionExpired(false)
         }
     }, [refreshSessionData]);
@@ -62,10 +65,13 @@ const useSessionControll = () => {
 
     const onLogout = async () => {
         console.log("Logout")
+        setSessionExpired(false)
+        navigate(authBaseRoute);
     }
 
     return {
         sessionExpired,
+        tokenValidationTime,
         setSessionExpired,
         onRefreshSession,
         onLogout

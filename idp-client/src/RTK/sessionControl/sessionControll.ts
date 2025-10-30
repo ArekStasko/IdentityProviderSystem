@@ -37,7 +37,7 @@ const useSessionControll = () => {
         if(accessToken){
             const interval = window.setInterval(() => {
                 validateToken(accessToken);
-            });
+            }, 60000);
             setIntervalId(interval)
         }
 

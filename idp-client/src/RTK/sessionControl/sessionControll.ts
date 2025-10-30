@@ -28,8 +28,9 @@ const useSessionControll = () => {
 
     useEffect(() => {
         if(!tokenValidationTime) return;
-        if(tokenValidationTime <= 0) {
+        if(tokenValidationTime <= 0 && intervalId) {
             setSessionExpired(true);
+            window.clearInterval(intervalId);
         }
     }, [tokenValidationTime]);
 

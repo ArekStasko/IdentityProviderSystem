@@ -22,7 +22,10 @@ const TrackingService = ({children, ExpirationBanner}: TrackingServiceProps) => 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(isAuthenticated) navigate(dashboardRoute);
+        if(isAuthenticated) {
+            navigate(dashboardRoute);
+            return;
+        }
         navigate(authBaseRoute);
     }, [isAuthenticated]);
 

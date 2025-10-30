@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import { useLocation, useNavigate } from "react-router";
-import {onSuccessfullLogin} from "../slices/authSlice";
+import {onSuccessfullLogin, onSuccessfullLogout} from "../slices/authSlice";
 import {RootState} from "../IdpClient";
 import {ExpirationBannerInterface} from "../models/ExpirationBannerInterface";
 import useSessionControll from "../RTK/sessionControl/sessionControll";
@@ -35,6 +35,11 @@ const TrackingService = ({children, ExpirationBanner}: TrackingServiceProps) => 
         const accessToken = parts.length === 4 ? parts[3] : null;
         if(refreshToken && accessToken) dispatch(onSuccessfullLogin({accessToken, refreshToken}));
     }, [location.pathname]);
+
+    const logout = async () => {
+        dispatch(onSuccessfullLogout());
+        await onLogout();
+    }
 
     return (
         <>

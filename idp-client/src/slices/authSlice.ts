@@ -1,7 +1,11 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {DeleteRefreshToken, SaveRefreshToken} from "../services/localStorageService";
 
-export type AuthSliceState = {
+export interface ClientAuthSliceState {
+    accessToken: string | null;
+}
+
+export interface AuthSliceState extends ClientAuthSliceState {
     isAuthenticated: boolean;
     authBaseRoute: string;
     dasboardRoute: string;

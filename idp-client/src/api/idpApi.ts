@@ -5,7 +5,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const idpApi = createApi({
     reducerPath: 'idpApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5274/api/idp'
+        baseUrl: 'http://192.168.1.40:8081/api/idp'
     }),
     endpoints: () => ({})
 });

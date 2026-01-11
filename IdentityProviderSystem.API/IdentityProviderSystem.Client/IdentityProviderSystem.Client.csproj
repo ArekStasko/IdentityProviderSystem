@@ -6,6 +6,7 @@
         <Authors>ArkadiuszStasko</Authors>
         <Company>ArkadiuszS</Company>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
     </PropertyGroup>
 
     <ItemGroup>

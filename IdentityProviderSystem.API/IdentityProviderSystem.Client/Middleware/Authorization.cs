@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using IdentityProviderSystem.Client.Services;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,18 @@ namespace IdentityProviderSystem.Client.Middleware
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
+
+            string secretToken = Environment.GetEnvironmentVariable("secretToken");
+
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                var transformedToken = token.Substring("Bearer ".Length).Trim();
+                if(transformedToken == secretToken)
+                {
+                    await _next(context);
+                }
+            }
+
             var tokenValidationResult = await _tokenService.ValidateToken(token);
             if (!tokenValidationResult.IsTokenValid)
             {

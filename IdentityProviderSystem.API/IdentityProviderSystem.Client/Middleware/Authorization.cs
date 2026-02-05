@@ -10,11 +10,13 @@ namespace IdentityProviderSystem.Client.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly ITokenService _tokenService;
+        private readonly ILogger<Authorization> _logger;
 
         public Authorization(RequestDelegate next, ITokenService tokenService, ILogger<Authorization> logger)
         {
             _next = next;
             _tokenService = tokenService;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -23,16 +25,17 @@ namespace IdentityProviderSystem.Client.Middleware
             if (string.IsNullOrEmpty(token))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                _logger.LogWarning("No authorization token provided");
                 return;
             }
 
             string secretToken = Environment.GetEnvironmentVariable("secretToken");
 
-            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            if (!string.IsNullOrEmpty(token))
             {
-                var transformedToken = token.Substring("Bearer ".Length).Trim();
-                if(transformedToken == secretToken)
+                if(token == secretToken)
                 {
+                    _logger.LogInformation("Successfully authenticated by secret token");
                     await _next(context);
                 }
             }

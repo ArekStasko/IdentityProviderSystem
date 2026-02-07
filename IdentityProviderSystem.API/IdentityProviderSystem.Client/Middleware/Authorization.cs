@@ -37,6 +37,7 @@ namespace IdentityProviderSystem.Client.Middleware
                 {
                     _logger.LogInformation("Successfully authenticated by secret token");
                     await _next(context);
+                    return;
                 }
             }
 

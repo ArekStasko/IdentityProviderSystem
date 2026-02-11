@@ -33,7 +33,8 @@ namespace IdentityProviderSystem.Client.Middleware
 
             if (!string.IsNullOrEmpty(token))
             {
-                if(token == secretToken)
+                var tokenParts = token.Split(' ');
+                if(tokenParts.Length == 2 && tokenParts[1] == secretToken)
                 {
                     _logger.LogInformation("Successfully authenticated by secret token");
                     await _next(context);

@@ -23,6 +23,7 @@ public class AccessTokenService : IAccessTokenService
         _saltService = saltService;
         _logger = logger;
     }
+    
     public async Task<Result<IAccessToken>> Generate(int userId)
     {
         try
@@ -135,6 +136,27 @@ public class AccessTokenService : IAccessTokenService
         {
             _logger.LogError("Check Access Token Expiration failed with an exception: {e}", e);
             return new Result<double>(e);
+        }
+    }
+    
+    public async Task<Result<IAccessToken?>> GetAccessTokenByUserId(int userId)
+    {
+        try
+        {
+            var result = await _repository.Get(userId);
+            return result.Match(AccessToken =>
+            {
+                return new Result<IAccessToken>(AccessToken);
+            }, err =>
+            {
+                _logger.LogError("Something went wrong while getting access token");
+                return new Result<IAccessToken>(err);
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, e.Message);
+            return new Result<IAccessToken?>(e);
         }
     }
 }

@@ -83,6 +83,25 @@ public class RefreshTokenService : IRefreshTokenService
         }
     }
 
+    public async Task<Result<bool>> RemoveIfExists(int userId)
+    {
+        try
+        {
+            var token = (await _repository.GetByUserId(userId)).Match(succ => succ, e =>
+            {
+                _logger.LogError("Get refresh token by user id failed with an exception: {e}", e);
+                throw e;
+            });
+            if(token == null) return new Result<bool>(true);
+            return await _repository.Remove(token.Id);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Check for existing refresh token failed with an exception: {e}", e);
+            return new Result<bool>(e);
+        }
+    }
+
     public async Task<Result<int>> GetUserId(string token)
     {
         try

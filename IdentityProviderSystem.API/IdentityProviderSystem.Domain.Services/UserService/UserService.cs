@@ -98,7 +98,8 @@ public class UserService : IUserService
             if(!verifyLogin) 
                 return new Result<SessionDTO>(new AuthenticationException());
 
-            var accessTokenCheck = VerifyIfUserAlreadyHasAccessToken(userToLogin.Id);
+            await _accessTokenService.RemoveIfExists(userToLogin.Id);
+            await _refreshTokenService.RemoveIfExists(userToLogin.Id);
             
             var accessTokenResult = await _accessTokenService.Generate(userToLogin.Id);
             var accessToken = accessTokenResult.Match(succ => succ, err =>
@@ -151,7 +152,7 @@ public class UserService : IUserService
                 throw e;
             });
 
-            _ = (await _accessTokenService.RemoveAccessTokenIfExists(userId)).Match(succ => succ, e =>
+            _ = (await _accessTokenService.RemoveIfExists(userId)).Match(succ => succ, e =>
             {
                 _logger.LogError("Removal of access token service failed");
                 throw e;
@@ -176,16 +177,6 @@ public class UserService : IUserService
         }
     }
 
-    private async Task<IAccessToken?> VerifyIfUserAlreadyHasAccessToken(int userId)
-    {
-        var result = await _accessTokenService.GetAccessTokenByUserId(userId);
-        return result.Match(accessToken => accessToken, err =>
-        {
-            _logger.LogError("Verify if user already has access token failed with error: {e}", err);
-            throw err;
-        });
-    }
-    
     private string GetHash(string pwd, string salt) => BCrypt.Net.BCrypt.HashPassword(pwd, salt);
     private bool VerifyHash(string pwd, string hash) => BCrypt.Net.BCrypt.Verify(pwd, hash);
 }

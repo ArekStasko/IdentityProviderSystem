@@ -54,27 +54,6 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         }
     }
 
-    public async Task<Result<IToken>> Update(IToken token)
-    {
-        try
-        {
-            var tokenToUpdate = await _context.RefreshTokens.FirstOrDefaultAsync(t => t.Id == token.Id);
-            if (tokenToUpdate == null)
-            {
-                _logger.LogError("There is no refresh token with {id} Id", token.Id);
-                return new Result<IToken>(new NullReferenceException());
-            }
-
-            await _context.SaveChangesAsync();
-            return new Result<IToken>(tokenToUpdate);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("Update refresh token repository method failed with an exception: {e}", e);
-            return new Result<IToken>(e);
-        }
-    }
-
     public async Task<Result<IList<IToken>>> Get()
     {
         try
@@ -86,6 +65,20 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         {
             _logger.LogError("Get refresh token repository method failed with an exception: {e}", e);
             return new Result<IList<IToken>>(e);
+        }
+    }
+
+    public async Task<Result<IToken?>> GetByUserId(int id)
+    {
+        try
+        {
+            var token = await _context.RefreshTokens.FirstOrDefaultAsync(t => t.UserId == id);
+            return new Result<IToken?>(token);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Get refresh token by user id repository method failed with an exception: {e}", e);
+            return new Result<IToken?>(e);
         }
     }
     

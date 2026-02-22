@@ -23,6 +23,7 @@ public class AccessTokenService : IAccessTokenService
         _saltService = saltService;
         _logger = logger;
     }
+    
     public async Task<Result<IAccessToken>> Generate(int userId)
     {
         try
@@ -72,7 +73,7 @@ public class AccessTokenService : IAccessTokenService
         }
     }
 
-    public async Task<Result<bool>> RemoveAccessTokenIfExists(int userId)
+    public async Task<Result<bool>> RemoveIfExists(int userId)
     {
         try
         {

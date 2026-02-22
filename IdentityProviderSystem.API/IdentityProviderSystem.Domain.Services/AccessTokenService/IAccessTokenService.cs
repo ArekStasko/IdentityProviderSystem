@@ -6,6 +6,6 @@ namespace IdentityProviderSystem.Domain.Services.TokenService;
 public interface IAccessTokenService
 {
     Task<Result<IAccessToken>> Generate(int userId);
-    Task<Result<bool>> RemoveAccessTokenIfExists(int userId);
+    Task<Result<bool>> RemoveIfExists(int userId);
     Task<Result<double>> Validate(string token);
 }

@@ -7,6 +7,7 @@ using IdentityProviderSystem.Domain.Services.RefreshTokenService;
 using IdentityProviderSystem.Domain.Services.SaltService;
 using IdentityProviderSystem.Domain.Services.TokenService;
 using IdentityProviderSystem.Persistance.Repositories.UserRepository;
+using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
 
@@ -93,30 +94,32 @@ public class UserService : IUserService
             if (userToLogin == null) return new Result<SessionDTO>(new NullReferenceException());
 
             var verifyLogin = VerifyHash(user.Password, userToLogin.Hash);
-            if (verifyLogin)
-            {
-                var accessTokenResult = await _accessTokenService.Generate(userToLogin.Id);
-                var accessToken = accessTokenResult.Match(succ => succ, err =>
-                {
-                    _logger.LogError("User service failed while generating access token: {e}", err);
-                    throw err;
-                });
-                
-                var refreshTokenResult = await _refreshTokenService.Generate(userToLogin.Id);
-                var refreshToken = refreshTokenResult.Match(succ => succ, err =>
-                {
-                    _logger.LogError("User service failed while generating refresh token: {e}", err);
-                    throw err;
-                });
-
-                return new Result<SessionDTO>(new SessionDTO()
-                {
-                    AccessToken = accessToken.Value,
-                    RefreshToken = refreshToken.Value
-                });
-            }
             
-            return new Result<SessionDTO>(new InvalidOperationException());
+            if(!verifyLogin) 
+                return new Result<SessionDTO>(new AuthenticationException());
+
+            await _accessTokenService.RemoveIfExists(userToLogin.Id);
+            await _refreshTokenService.RemoveIfExists(userToLogin.Id);
+            
+            var accessTokenResult = await _accessTokenService.Generate(userToLogin.Id);
+            var accessToken = accessTokenResult.Match(succ => succ, err =>
+            {
+                _logger.LogError("User service failed while generating access token: {e}", err);
+                throw err;
+            });
+                
+            var refreshTokenResult = await _refreshTokenService.Generate(userToLogin.Id);
+            var refreshToken = refreshTokenResult.Match(succ => succ, err =>
+            {
+                _logger.LogError("User service failed while generating refresh token: {e}", err);
+                throw err;
+            });
+
+            return new Result<SessionDTO>(new SessionDTO()
+            {
+                AccessToken = accessToken.Value,
+                RefreshToken = refreshToken.Value
+            });
         }
         catch (Exception e)
         {
@@ -149,7 +152,7 @@ public class UserService : IUserService
                 throw e;
             });
 
-            _ = (await _accessTokenService.RemoveAccessTokenIfExists(userId)).Match(succ => succ, e =>
+            _ = (await _accessTokenService.RemoveIfExists(userId)).Match(succ => succ, e =>
             {
                 _logger.LogError("Removal of access token service failed");
                 throw e;

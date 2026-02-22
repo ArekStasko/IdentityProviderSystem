@@ -75,16 +75,11 @@ public class AccessTokenRepository : IAccessTokenRepository
         }
     }
 
-    public async Task<Result<IAccessToken>> Get(int userId)
+    public async Task<Result<IAccessToken?>> Get(int userId)
     { 
         try
         {
             var token = await _context.AccessTokens.FirstOrDefaultAsync(t => t.UserId == userId);
-            if (token == null)
-            {
-                _logger.LogError("User with {id} Id doesnt have any valid tokens");
-                return new Result<IAccessToken>(token);
-            }
             return new Result<IAccessToken>(token);
         }
         catch (Exception e)

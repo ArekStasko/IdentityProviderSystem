@@ -106,7 +106,6 @@ public class RefreshTokenService : IRefreshTokenService
     {
         try
         {
-            _logger.LogError("Get user id by refresh token starts processing");
             var refreshTokenResult = await _repository.Get(token);
             return refreshTokenResult.Match(succ => succ.UserId, err =>
             {

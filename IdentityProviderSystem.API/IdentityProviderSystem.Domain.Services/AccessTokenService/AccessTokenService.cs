@@ -79,20 +79,20 @@ public class AccessTokenService : IAccessTokenService
         {
             var accessToken = (await _repository.Get(userId)).Match(succ => succ, e =>
             {
-                _logger.LogError("Removing access tokens from access token db: {e}", e);
+                _logger.LogError("Remove access token if exists method thrown an exception while getting token: {e}", e);
                 throw e;
             });
             
             if(accessToken == null) return new Result<bool>(true);
             return (await _repository.Remove(accessToken.Id)).Match(succ => succ, e =>
             {
-                _logger.LogError("Removing access tokens from access token db: {e}", e);
+                _logger.LogError("Remove access token if exists method thrown an exception while removing token: {e}", e);
                 throw e;
             });
         }
         catch (Exception e)
         {
-            _logger.LogError("Checking for existing access token failed with error: {e}", e);
+            _logger.LogError("Remove access token if exists method failed with error: {e}", e);
             throw;
         }
     }

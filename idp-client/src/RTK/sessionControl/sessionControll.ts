@@ -17,7 +17,11 @@ const useSessionControll = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const isRefreshSessionExecuting = React.useRef(false);
+
     useEffect(() => {
+        if (isRefreshSessionExecuting.current) return;
+        isRefreshSessionExecuting.current = true;
         const refreshToken = GetRefreshToken();
         if(refreshToken && !accessToken) {
             const runRefreshSession = async () => await refreshSession(refreshToken).unwrap();
@@ -65,7 +69,6 @@ const useSessionControll = () => {
     }
 
     const onLogout = async () => {
-        console.log("Logout")
         setSessionExpired(false)
         navigate(authBaseRoute);
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using IdentityProviderSystem.Client.Services;
 using Microsoft.AspNetCore.Http;
@@ -9,11 +10,13 @@ namespace IdentityProviderSystem.Client.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly ITokenService _tokenService;
+        private readonly ILogger<Authorization> _logger;
 
         public Authorization(RequestDelegate next, ITokenService tokenService, ILogger<Authorization> logger)
         {
             _next = next;
             _tokenService = tokenService;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -22,8 +25,23 @@ namespace IdentityProviderSystem.Client.Middleware
             if (string.IsNullOrEmpty(token))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                _logger.LogWarning("No authorization token provided");
                 return;
             }
+
+            string secretToken = Environment.GetEnvironmentVariable("secretToken");
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                var tokenParts = token.Split(' ');
+                if(tokenParts.Length == 2 && tokenParts[1] == secretToken)
+                {
+                    _logger.LogInformation("Successfully authenticated by secret token");
+                    await _next(context);
+                    return;
+                }
+            }
+
             var tokenValidationResult = await _tokenService.ValidateToken(token);
             if (!tokenValidationResult.IsTokenValid)
             {

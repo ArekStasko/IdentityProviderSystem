@@ -5,6 +5,7 @@ import {configureStore, Middleware} from "@reduxjs/toolkit";
 import idpApi from "./api/idpApi";
 import authReducer, {AuthSliceState, setAuthBaseRoute, setDashboardRoute} from "./slices/authSlice";
 import TrackingService from "./services/trackingService";
+import {ExpirationBannerInterface} from "./models/ExpirationBannerInterface";
 
 export interface RootState {
     auth: AuthSliceState
@@ -15,9 +16,10 @@ interface IdpClientProps {
     clientApi: any;
     authBaseRoute: string;
     dashboardRoute: string;
+    expirationBanner: React.ComponentType<ExpirationBannerInterface>
 }
 
-const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute}: IdpClientProps) => {
+const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute, expirationBanner}: IdpClientProps) => {
 
     const store = configureStore({
         reducer: {
@@ -33,7 +35,7 @@ const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute}: IdpClie
 
     return(
         <Provider store={store}>
-            <TrackingService>
+            <TrackingService ExpirationBanner={expirationBanner}>
                 {children}
             </TrackingService>
         </Provider>

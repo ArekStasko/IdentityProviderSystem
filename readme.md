@@ -1,6 +1,6 @@
 # IdP - Identity Provider
 
-This project allows me to authenticate users accross my applications.
+This project allows me and you to authenticate users accross your applications.
 For now i use this project for Plantcare application but in the future it will allows me to use it generatively for different kinds of my apps.
 
 ### How it works ?

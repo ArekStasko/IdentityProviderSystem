@@ -24,7 +24,7 @@ namespace IdentityProviderSystem.Client.Services
             try
             {
                 var tokenDto = new TokenDto() { IsTokenValid = false };
-                string uri = $"/api/idp-v1/token/checkTokenExp?token={token}";
+                string uri = $"/api/idp/access-token/validate?token={token}";
                 var handler = new JwtSecurityTokenHandler();
                 var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
                 HttpResponseMessage response = await _httpClient.GetAsync(uri);
@@ -37,8 +37,8 @@ namespace IdentityProviderSystem.Client.Services
                 }
 
                 var userId = int.Parse(userIdClaim.Value);
-                var isTokenValid = JsonConvert.DeserializeObject<bool>(body);
-                tokenDto.IsTokenValid = isTokenValid;
+                var expirationTime = JsonConvert.DeserializeObject<double>(body);
+                tokenDto.IsTokenValid = expirationTime > 0;
                 tokenDto.UserId = userId;
 
                 return tokenDto;

@@ -1,0 +1,9 @@
+let getTokenFn: (() => string | null) | null = null;
+
+export const setTokenGetter = (fn: () => string | null) => {
+    getTokenFn = fn;
+};
+
+export const getToken = () => {
+    return getTokenFn ? getTokenFn() : null;
+};

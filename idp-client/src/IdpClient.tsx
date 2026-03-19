@@ -6,6 +6,7 @@ import idpApi from "./api/idpApi";
 import authReducer, {AuthSliceState, setAuthBaseRoute, setDashboardRoute} from "./slices/authSlice";
 import TrackingService from "./services/trackingService";
 import {ExpirationBannerInterface} from "./models/ExpirationBannerInterface";
+import {setTokenGetter} from "./services/tokenGetter";
 
 export interface RootState {
     auth: AuthSliceState
@@ -30,6 +31,9 @@ const IdpClient = ({children, clientApi, authBaseRoute, dashboardRoute, expirati
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(idpApi.middleware, clientApi.middleware),
     });
+
+    setTokenGetter(() => store.getState().auth.accessToken);
+
     store.dispatch(setAuthBaseRoute(authBaseRoute));
     store.dispatch(setDashboardRoute(dashboardRoute));
 
